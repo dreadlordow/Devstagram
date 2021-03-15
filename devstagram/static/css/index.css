@@ -1,0 +1,52 @@
+.container {
+    width: 30%;
+    place-items: center;
+    justify-self: center;
+    justify-content: center;
+    justify-items: center;
+    align-self: center;
+    align-content: center;
+    align-items: center;
+    line-height: 100%;
+    text-align: center;
+    margin: auto auto;
+    vertical-align: middle;
+}
+
+.post {
+    border: 1px solid #8e44ad;
+    margin-bottom: 1rem;
+}
+
+.picture {
+    max-width: 100%;
+}
+
+.username {
+    float: left;
+    padding: 5px 5px;
+    font-size: 18px;
+}
+
+.upload-btn{
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
+.heartbtn{
+    border: none;
+	background-color: white;
+	padding: 15px 35px;
+	margin: 0 10px;
+	text-align: center;
+	text-decoration: none;
+	font-weight: bold;
+	display: inline-block;
+	font-size: 16px;
+	cursor: pointer;
+	transition: all 0.3s;
+}
+
+a{
+    color: white;
+}

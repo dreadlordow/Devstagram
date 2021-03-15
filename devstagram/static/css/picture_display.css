@@ -1,0 +1,22 @@
+.container{
+    display:flex;
+    flex-direction: row;
+    justify-content: center;
+}
+.edit {
+    margin-top: 1rem;
+    margin-left: 30%;
+    position: center;
+}
+
+.comment-box{
+    margin-left: 1rem;
+    border: solid 1px rgba(0, 0, 0, 0.3);
+    width: 15%;
+
+}
+
+.comment-post{
+    position: center;
+    margin-left: 25%
+}

@@ -1,0 +1,21 @@
+{% load static %}
+{% load crispy_forms_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/signup.css' %}">
+</head>
+<body>
+<h2>Create your Devstagram account</h2>
+<form action="{% url 'register' %}" method="post" class="signup-form">
+    {% csrf_token %}
+    <div class="container">
+        {{ form|crispy }}
+        <button type="submit" class="login-btn">SIGN UP</button>
+    </div>
+</form>
+
+</body>
+</html>

@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div style="margin-left: 40%">
+    <img style="border-radius: 50%; width: 200px; height: 200px" src="{{ currentpfp.image.url }}">
+        <br>
+    <form method="post" action="{% url 'upload pfp' %}" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <br>
+        <button>Upload</button>
+    </form>
+    </div>
+{% endblock %}

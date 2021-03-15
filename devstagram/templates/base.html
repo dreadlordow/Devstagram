@@ -1,0 +1,115 @@
+{% load static %}
+{% load class_tag %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
+          crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/base.css' %}">
+    <script src="{% static 'js/base.js' %}"></script>
+    <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <style>a {
+        color: black
+    }
+
+    a i {
+        color: red
+    }</style>
+
+
+    {% block styles %}{% endblock %}
+</head>
+<body>
+<div class="alldata">
+    <nav class="navigation">
+        <ul>
+            <li class="nav-item">
+                <a href="{% url 'index' %}">Home</a>
+            </li>
+
+            <li class="nav-item">
+                <form method="get" action="{% url 'search' %}">
+                    <input name="q" type="text" placeholder="search">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </form>
+            </li>
+
+
+            {% if not request.user.is_anonymous %}
+
+                <li class="nav-item">
+                    <button class="dropbtn fas fa-comment-alt" onclick=chatFunc()>
+                    </button>
+                    <ul id="chatdropdown" class="dropdown-content">
+                        {% for chatroom, usr in chatroom_user %}
+                            <a class="chat-link" href="{% url 'chatroom' usr.username %}">
+                                <li>
+                                    <img width="50" height="50" src="{{ usr.profilepicture_set.first.image.url }}">
+
+                                    <strong style="margin-left: 1rem; margin-top: -1rem">{{ usr.username }}</strong>
+                                    <p style="margin-left: 5rem">{{ chatroom.message_set.last.message }}</p>
+
+                                </li>
+                            </a>
+                            <hr style="border: 1px solid black">
+                        {% endfor %}
+                    </ul>
+                </li>
+
+                <li id="notification" class="nav-item notification">
+                <button onclick=myFunction() class="dropbtn fas fa-bell"> - {{ notifslen }}</button>
+
+                <ul id="myDropdown" class="dropdown-content">
+                {% for notification in notifications %}
+
+                    <li>
+                        {% if notification|get_class == 'FriendRequest' %}
+                            <span>{{ notification }}</span>
+                            <form style="display: inline-block" action="{% url 'friendship' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="sender" value="{{ notification.sender.username }}">
+                                <input type="hidden" name="receiver" value="{{ request.user }}">
+                                <button type="submit" name="answer" value="accepted" style="display: inline-block">
+                                    Accept
+                                </button>
+                                <button type="submit" name="answer" value="declined" style="display: inline-block">
+                                    Decline
+                                </button>
+                            </form>
+                            </li>
+                        {% else %}
+                            <a class="chat-link"
+                               href="{% url 'picture display' notification.picture.user notification.picture.id %}">
+                            <span>
+                                <img style="width: 50px; height: 50px" src="{{ notification.picture.picture.url }}">
+                                    {{ notification.user.username }} liked your picture</span>
+                            </a>
+                        {% endif %}
+                    <hr>
+                {% endfor %}
+            {% endif %}
+            </ul>
+
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'profile' request.user.username %}">{{ request.user.username }}</a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url 'logout' %}">Logout</a>
+            </li>
+
+
+        </ul>
+    </nav>
+    {% block content %}
+    {% endblock %}
+</div>
+{% block ajaxjs %}
+{% endblock %}
+
+
+</body>
+</html>

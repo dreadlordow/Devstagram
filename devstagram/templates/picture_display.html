@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/picture_display.css' %}">
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+        <div class="container-item">
+            <div class="picture-user">
+                {{ picture.user.username }}
+            </div>
+            <img height="400" width="400" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
+            <p>{{ picture.like_set.count }} likes</p>
+            <p>{{ picture.description }}</p>
+
+            {% if request.user.id == picture.user_id %}
+                <form method="get" action="{% url 'edit' picture.pk %}" enctype="multipart/form-data">
+                    <button>Edit</button>
+                </form>
+            {% endif %}
+        </div>
+
+        <div class="container-item comment-box">
+            {% for comment in comments %}
+                <div class="comment">
+
+                    <div class="picture-box">
+                        <strong>{{ comment.picture.user.username }}</strong>
+                    </div>
+
+                    <div class="comment-text">
+                        <p>{{ comment.comment }}</p>
+                    </div>
+                </div>
+                <hr style="border: 1px solid rgba(0,0,0, 03)">
+            {% endfor %}
+        </div>
+
+    </div>
+    <div class="comment-post">
+        <form method="post" action="{% url 'comment' %}">
+            {% csrf_token %}
+            {{ form }}
+            <input type="hidden" name="pic_id" value="{{ picture.id }}">
+            <button>Post</button>
+        </form>
+    </div>
+
+
+{% endblock %}

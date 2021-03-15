@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <a class="btn btn-primary upload-btn" href="{% url 'upload' %}">Upload picture</a>
+        <div id="likediv" class="like-picture">
+            <ul>
+                {% for picture in pictures %}
+                    <li class="post">
+                        <a href="{% url 'profile' picture.user %}"><span
+                                class="username">{{ picture.user.username }}</span></a>
+                        <a href="{% url 'picture display' picture.user.username picture.pk %}">
+                            <img class="picture" src="{{ picture.picture.url }}">
+                        </a>
+                        <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
+
+                        {% if user.id in picture.likes_as_flat_list %}
+                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                    class="fas fa-heart"></i></a>
+                        {% else %}
+                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                    class="far fa-heart"></i></a>
+
+                        {% endif %}
+
+                        <p style="color:white;" class="description">{{ picture.description }}</p>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+{% block ajaxjs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script type="text/javascript">
+
+        $(".pic_pk").on('click', function (e) {
+            e.preventDefault();
+            let link = $(this).attr('href')
+            let curSpan = $(this).siblings('.like-span')
+            let curHeart = $(this).children('.fa-heart')
+            $.ajax({
+                cache: false,
+                type: 'GET',
+                url: link,
+                success: function (data) {
+                    let likes = data['likes']
+                    let userId = data['user_id']
+                    let idList = data['id_list']
+                    let action = data['action']
+                    curSpan.text(likes + ' likes')
+
+                    if (action === 'unlike') {
+                        curHeart.removeClass('fas')
+                        curHeart.addClass('far')
+                    } else {
+                        curHeart.removeClass('far')
+                        curHeart.addClass('fas')
+                    }
+
+                }
+
+
+            })
+
+        })
+    </script>
+{% endblock %}

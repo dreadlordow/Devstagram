@@ -1,0 +1,43 @@
+html {
+    height: 100%;
+    background-image: linear-gradient(to right top, #8e44ad 0%, #3498db 100%);
+}
+
+.container {
+    width: 40%;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid springgreen;
+    padding: 15px 15px;
+    margin: 10% 30%;
+}
+
+.signup-form {
+    padding: 10px 10px;
+    color: #f4f4f4;
+    align-content: center;
+
+/*&:before {*/
+/*    content: '';*/
+/*    position: absolute;*/
+/*    top: -2px;*/
+/*    left: 0;*/
+/*    height: 2px;*/
+/*    width: 100%;*/
+/*}*/
+
+}
+
+.login-btn {
+    display: block;
+    margin-left: 30%;
+    padding: 1em;
+    width: 40%;
+    background-color: #23CABE;
+    color: white;
+    border: 0;
+    cursor: pointer;
+    font-size: .75em;
+    font-weight: 600;
+    text-shadow: 0 1px 0 rgba(0,0,0, 0.2);
+}

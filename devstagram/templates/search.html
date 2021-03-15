@@ -1,0 +1,6 @@
+{% extends 'base.html' %}
+{% block content %}
+    {% for searched_user in searched_users %}
+        {{ searched_user.username }}
+    {% endfor %}
+{% endblock %}

@@ -1,0 +1,65 @@
+html, body, h1, h2, h3, h4, h5, h6, p, li, ol, ul, pre {
+	margin: 0;
+	padding: 0;
+}
+
+body{
+    background: #1c1e22;
+}
+
+a {
+    text-decoration: none;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.navigation {
+    background-image: linear-gradient(to right top, #8e44ad 0%, #3498db 100%);
+    padding: 5px;
+    margin: 0;
+}
+
+.nav-item {
+    display: inline-block;
+    padding: 10px 20px;
+    margin-right:2rem;
+}
+
+.item :hover {
+    background-color: #23CABE;
+}
+
+.dropbtn{
+    border: none;
+    background: none;
+    color: white;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f1f1f1;
+    width: 400px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
+}
+
+.dropdown-content span {
+    padding: 16px 5px;
+    margin-bottom: 1rem;
+}
+
+.show {
+    display: block;
+}
+
+.dropdown-content li{
+    padding: 15px 0;
+}
+
+.chat-link{
+    color:black
+}

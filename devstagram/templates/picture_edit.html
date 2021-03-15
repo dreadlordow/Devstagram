@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block content %}
+    <div style="margin-left: 20%">
+    <form method="post" action="{% url 'edit' pk%}" enctype="multipart/form-data">
+    {% csrf_token %}
+        {{ form }}
+    <button>Edit</button>
+    </form>
+    </div>
+{% endblock %}
