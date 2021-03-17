@@ -1,13 +1,17 @@
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.core.serializers import serialize
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
+
 from django.contrib.auth import mixins as auth_mixins
 
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
     CommentForm, ProfilePictureUploadForm
+from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
 from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture
 
 from itertools import chain
@@ -47,7 +51,7 @@ class PictureUploadView(auth_mixins.LoginRequiredMixin, views.CreateView):
         return super().form_valid(form)
 
 
-class LikePicture(auth_mixins.LoginRequiredMixin, views.View):
+class LikePicture(auth_mixins.LoginRequiredMixin,NotificationMixin ,views.View):
     def get(self, request, *args, **kwargs):
         picture = Picture.objects.get(pk=kwargs['pk'])
         user = request.user
@@ -67,7 +71,7 @@ class LikePicture(auth_mixins.LoginRequiredMixin, views.View):
             'likes': likes,
             'user_id': user.id,
             'id_list': list(user_id_list),
-            'action': action
+            'action': action,
         })
 
 
@@ -99,6 +103,7 @@ class ProfileView(views.DetailView):
         context['friendship'] = True if friendship else False
         context['profile_picture'] = profile_picture
         context['is_friend_request_sent'] = is_friend_request_sent
+
 
         return context
 
@@ -199,7 +204,15 @@ class CommentPictureView(auth_mixins.LoginRequiredMixin, views.View):
         comment.user = request.user
         comment.picture_id = picture_id
         comment.save()
-        return redirect('index')
+
+        picture = Picture.objects.get(pk=picture_id)
+        comments = Comment.objects.filter(picture_id=picture.id)
+        context = {
+            'form': CommentForm,
+            'comments': comments,
+            'picture': picture
+        }
+        return render(request, 'picture_display.html', context)
 
 
 class ProfilePictureUploadView(views.View):

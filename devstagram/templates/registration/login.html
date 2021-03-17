@@ -8,10 +8,10 @@
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-    <form action="{% url 'login' %}" method="post">
-        {% csrf_token %}
+<form action="{% url 'signin' %}" method="post">
+    {% csrf_token %}
     {{ form|crispy }}
     <button class="sign-in-btn">Sign in</button>
-        </form>
+</form>
 </body>
 </html>

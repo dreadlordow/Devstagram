@@ -10,6 +10,8 @@ urlpatterns = [
     path('', include('devstagram.registration.urls')),
     path('', include('devstagram.mainsite.urls')),
     path('', include('devstagram.chat.urls')),
+    path('', include('devstagram.async_chat.urls')),
+
 
 
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

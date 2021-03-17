@@ -1,0 +1,22 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+</head>
+<body style="place-items: center">
+<h1 style="color: white">An email with the authentication code has been sent to your email - {{ user.email }}</h1>
+<div style="margin-left:40%">
+    <form action="{% url '2fa' hash_url %}" method="post">
+        {% csrf_token %}
+        <input type="text" name="2fa">
+        <input type="hidden" name="username" value="{{ user.username }}">
+        <input type="hidden" name="password" value="{{ password }}">
+        <button>Submit</button>
+    </form>
+</div>
+</body>
+</html>

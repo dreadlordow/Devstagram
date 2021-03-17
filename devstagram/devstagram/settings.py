@@ -30,6 +30,7 @@ INSTALLED_APPS = [
     'devstagram.registration',
     'devstagram.mainsite',
     'devstagram.chat',
+    'devstagram.async_chat',
 
 ]
 
@@ -111,19 +112,23 @@ USE_TZ = True
 ASGI_APPLICATION = 'devstagram.routing.application'
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
 STATIC_ROOT = ''
 STATICFILES_DIRS = (
     join(BASE_DIR, 'static'),
 )
 
-
 MEDIA_URL = '/media/'
 MEDIA_ROOT = join(BASE_DIR, 'media')
+
 LOGIN_REDIRECT_URL = reverse_lazy('index')
 LOGOUT_REDIRECT_URL = reverse_lazy('landing page')
 
 
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL = 'georgipavlov910@gmail.com'
+EMAIL_HOST_USER = 'georgipavlov910@gmail.com'
+EMAIL_HOST_PASSWORD = 'Georgi0808'

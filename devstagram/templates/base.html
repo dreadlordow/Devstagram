@@ -37,13 +37,13 @@
                 </form>
             </li>
 
-
             {% if not request.user.is_anonymous %}
 
                 <li class="nav-item">
                     <button class="dropbtn fas fa-comment-alt" onclick=chatFunc()>
                     </button>
                     <ul id="chatdropdown" class="dropdown-content">
+
                         {% for chatroom, usr in chatroom_user %}
                             <a class="chat-link" href="{% url 'chatroom' usr.username %}">
                                 <li>
@@ -56,6 +56,7 @@
                             </a>
                             <hr style="border: 1px solid black">
                         {% endfor %}
+
                     </ul>
                 </li>
 
@@ -63,8 +64,8 @@
                 <button onclick=myFunction() class="dropbtn fas fa-bell"> - {{ notifslen }}</button>
 
                 <ul id="myDropdown" class="dropdown-content">
-                {% for notification in notifications %}
 
+                {% for notification in notifications %}
                     <li>
                         {% if notification|get_class == 'FriendRequest' %}
                             <span>{{ notification }}</span>
@@ -90,6 +91,7 @@
                         {% endif %}
                     <hr>
                 {% endfor %}
+
             {% endif %}
             </ul>
 

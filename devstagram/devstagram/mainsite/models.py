@@ -1,5 +1,17 @@
+from hashlib import sha256
+
 from django.contrib.auth.models import User
 from django.db import models
+
+
+class UserAuth(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    two_factor_auth = models.BooleanField(blank=True)
+
+
+class TwoFactorAuthMsg(models.Model):
+    hash_url = models.CharField(max_length=1000)
+    two_factor_code = models.IntegerField()
 
 
 class Picture(models.Model):
@@ -20,6 +32,7 @@ class FriendRequest(models.Model):
 
     def __str__(self):
         return f'{self.sender.username} sent you a friend request.'
+
 
 
 class Friendship(models.Model):
