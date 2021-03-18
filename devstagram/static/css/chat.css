@@ -27,7 +27,7 @@ body {
     max-height: calc(100% - 100px);
     background: #2f323b;
     overflow: auto;
-    margin-bottom: 6%;
+    margin-bottom: 5%;
 }
 .chat-input {
     flex: 0 0 auto;

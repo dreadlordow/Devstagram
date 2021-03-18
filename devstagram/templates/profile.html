@@ -30,7 +30,7 @@
             {% endif %}
         </form>
     {% else %}
-        <form method="post" action="{% url 'chatroom' user.username %}">
+        <form method="post" action="{% url 'asyncroom' request.user.username user.username %}">
             {% csrf_token %}
             <button class="btn btn-primary send-btn">Send message</button>
         </form>

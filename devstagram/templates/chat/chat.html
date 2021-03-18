@@ -103,56 +103,59 @@
     <section class="chatbox">
         <section id="chat-window" class="chat-window">
             {% for msg in messages %}
-                    {% if msg.sender == request.user %}
-                        <article class="msg-container msg-self" id="msg-0">
-
-
-                            <div class="msg-box">
-                                <img class="user-img" id="user-0"
-                                     src="{{ sender_pfp.image.url }}"/>
-                                <div class="flr">
-                                    <div class="messages">
-                                        <p class="msg" id="msg-0">
-                                            {{ msg.message }}
-                                        </p>
-                                    </div>
-                                    <span class="timestamp"><span class="username">{{ request.user.username }}</span>&bull;<span
-                                            class="posttime">3 minutes ago</span></span>
+                {% if msg.sender == request.user %}
+                    <article class="msg-container msg-self" id="msg-0">
+                        <div class="msg-box">
+                            <img class="user-img" id="user-0"
+                                 src="{{ sender_pfp.image.url }}"/>
+                            <div class="flr">
+                                <div class="messages">
+                                    <p class="msg" id="msg-0">
+                                        {{ msg.message }}
+                                    </p>
                                 </div>
+                                <span class="timestamp"><span
+                                        class="username">{{ request.user.username }}</span>&bull;<span
+                                        class="posttime">3 minutes ago</span></span>
                             </div>
-                        </article>
-                    {% else %}
-                        <article class="msg-container msg-remote" id="msg-0">
-                            <div class="msg-box">
-                                <img class="user-img" id="user-0"
-                                     src="{{ receiver_pfp.image.url }}"/>
-                                <div class="flr">
-                                    <div class="messages">
-                                        <p class="msg" id="msg-0">
-                                            {{ msg.message }}
-                                        </p>
-                                    </div>
-                                    <span class="timestamp"><span
-                                            class="username">name</span>&bull;<span
-                                            class="posttime">3 minutes ago</span></span>
+                        </div>
+                    </article>
+                {% else %}
+                    <article class="msg-container msg-remote" id="msg-0">
+                        <div class="msg-box">
+                            <img class="user-img" id="user-0"
+                                 src="{{ receiver_pfp.image.url }}"/>
+                            <div class="flr">
+                                <div class="messages">
+                                    <p class="msg" id="msg-0">
+                                        {{ msg.message }}
+                                    </p>
                                 </div>
+                                <span class="timestamp"><span
+                                        class="username">name</span>&bull;<span
+                                        class="posttime">3 minutes ago</span></span>
                             </div>
-                        </article>
-                    {% endif %}
+                        </div>
+                    </article>
+                {% endif %}
 
             {% endfor %}
         </section>
 
-        <form method="post" id="sendmsg"  class="chat-input">
+        <form method="post" id="sendmsg" class="chat-input">
             {% csrf_token %}
             <input name="message" id="message" type="text" autocomplete="on" placeholder="Type a message"/>
             <input type="hidden" id="receiver" name="receiver" value="{{ receiver }}">
             <input type="hidden" id="chatroom_id" name="chatroom_id" value="{{ chatroom_id }}">
             <button type="submit">
                 <svg style="width:24px;height:24px" viewBox="0 0 24 24">
-                    <path fill="rgba(0,0,0,.38)"
-                          d="M17,12L12,17V14H8V10H12V7L17,12M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94 12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12 3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06 12.57,2.18L20.47,6.62C20.79,6.79 21,7.12 21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"/>
+                    d="M17,12L12,17V14H8V10H12V7L17,12M21,16.5C21,16.88 20.79,17.21 20.47,17.38L12.57,21.82C12.41,21.94
+                    12.21,22 12,22C11.79,22 11.59,21.94 11.43,21.82L3.53,17.38C3.21,17.21 3,16.88 3,16.5V7.5C3,7.12
+                    3.21,6.79 3.53,6.62L11.43,2.18C11.59,2.06 11.79,2 12,2C12.21,2 12.41,2.06
+                    12.57,2.18L20.47,6.62C20.79,6.79 21,7.12
+                    21,7.5V16.5M12,4.15L5,8.09V15.91L12,19.85L19,15.91V8.09L12,4.15Z"/>
                 </svg>
+                <path fill="rgba(0,0,0,.38)"
             </button>
         </form>
     </section>
@@ -163,7 +166,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script type="text/javascript">
 
-        $(document).on('submit','#sendmsg' , function (e) {
+        $(document).on('submit', '#sendmsg', function (e) {
             e.preventDefault();
 
             $.ajax({

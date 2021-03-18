@@ -132,3 +132,9 @@ EMAIL_PORT = 587
 DEFAULT_FROM_EMAIL = 'georgipavlov910@gmail.com'
 EMAIL_HOST_USER = 'georgipavlov910@gmail.com'
 EMAIL_HOST_PASSWORD = 'Georgi0808'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels.layers.InMemoryChannelLayer'
+    }
+}

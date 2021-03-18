@@ -3,7 +3,7 @@ from operator import attrgetter
 
 from django.contrib.auth.models import User
 
-from devstagram.chat.models import ChatRoom
+from devstagram.async_chat.models import ChatRoom
 from devstagram.mainsite.models import FriendRequest, Picture
 
 
