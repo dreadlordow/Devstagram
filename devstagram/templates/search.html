@@ -16,7 +16,11 @@
                                  alt="{{ usr.username }}">
                         </div>
 
-                        <div class="name"><p style="color:red">{{ usr.username }}</p></div>
+                        <div class="name">
+                            <a href="{% url 'profile' usr %}" style="color:red">{
+                                { usr.username }}
+                            </a>
+                        </div>
 
 
                         <div class="actions">
