@@ -29,10 +29,10 @@ class RegisterForm(UserCreationForm):
 
     def save(self, commit=True):
         user = super().save(commit=False)
+        user.save()
         try:
-            user_auth = UserAuth(user=user, two_factor_auth=self.cleaned_data['two_factor_auth'])
+            user_auth = UserAuth(user=user, two_factor_auth=self.cleaned_data['two_factor_authentication'])
             user_auth.save()
         except KeyError:
             pass
-        user.save()
         return user

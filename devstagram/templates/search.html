@@ -1,6 +1,54 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block styles %}
+    <link rel="stylesheet" href="{% static 'css/profilecard.css' %}">{% endblock %}
 {% block content %}
-    {% for searched_user in searched_users %}
-        {{ searched_user.username }}
-    {% endfor %}
+    <div class="wrapper">
+        {% for usr, likes in searched_users_all_likes %}
+
+            <div class="frame">
+                <div class="center">
+                    <div class="profile">
+                        <div class="image" style="color:red">
+                            <div class="circle-1"></div>
+                            <div class="circle-2"></div>
+                            <img src="{{ usr.profilepicture_set.first.image.url }}" width="70" height="70"
+                                 alt="{{ usr.username }}">
+                        </div>
+
+                        <div class="name"><p style="color:red">{{ usr.username }}</p></div>
+
+
+                        <div class="actions">
+                            <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
+                                {% csrf_token %}
+                                <input id="sender" type="hidden" name="sender" value="{{ request.user }}">
+                                <input id="receiver" type="hidden" name="receiver" value="{{ usr }}">
+                                <button class="btn">Add friend</button>
+                            </form>
+                            <form method="post" action="{% url 'asyncroom' request.user.username usr.username %}">
+                                {% csrf_token %}
+                                <button class="btn">Message</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="stats" style="color: red">
+                        <div class="box">
+                            <span class="value">{{ usr.picture_set.count }}</span>
+                            <span class="parameter">Posts</span>
+                        </div>
+                        <div class="box">
+                            <span class="value">{{ likes }}</span>
+                            <span class="parameter">Likes</span>
+                        </div>
+                        <div class="box">
+                            <span class="value">{{ usr.userfriends_set.first.friends }}</span>
+                            <span class="parameter">Friends</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

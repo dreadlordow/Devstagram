@@ -1,6 +1,4 @@
 from django.contrib.auth.models import User
-from django.core.mail import send_mail
-from django.core.serializers import serialize
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
@@ -11,7 +9,7 @@ from django.contrib.auth import mixins as auth_mixins
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
     CommentForm, ProfilePictureUploadForm
 from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
-from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture
+from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture, UserFriends
 
 from itertools import chain
 
@@ -139,10 +137,16 @@ class CreateFriendship(views.View):
         receiver_username = request.POST['receiver']
         sender = User.objects.get(username=sender_username)
         receiver = User.objects.get(username=receiver_username)
+        sender_friends, created = UserFriends.objects.get_or_create(user=sender)
+        receiver_friends, created = UserFriends.objects.get_or_create(user=receiver)
         if request.POST['answer'] == 'accepted':
             friendship.friend_one = sender
             friendship.friend_two = receiver
             friendship.save()
+            sender_friends.friends += 1
+            receiver_friends.friends += 1
+            sender_friends.save()
+            receiver_friends.save()
 
         request_to_remove = FriendRequest.objects.get(sender=sender, receiver=receiver)
         request_to_remove.delete()
@@ -244,5 +248,11 @@ class SearchView(views.View):
     def get(self, request, *args, **kwargs):
         search = request.GET['q']
         users = User.objects.filter(username__icontains=search)
-        context = {'searched_users': users}
+        all_likes = []
+        for user in users:
+            likes = 0
+            for pic in user.picture_set.all():
+                likes += len(pic.likes_as_flat_list())
+            all_likes.append(likes)
+        context = {'searched_users_all_likes': list(zip(users, all_likes))}
         return render(request, 'search.html', context)

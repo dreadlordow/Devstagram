@@ -1,6 +1,7 @@
 from hashlib import sha256
 
 from django.contrib.auth.models import User
+from django.contrib.postgres.fields import ArrayField
 from django.db import models
 
 
@@ -34,10 +35,14 @@ class FriendRequest(models.Model):
         return f'{self.sender.username} sent you a friend request.'
 
 
-
 class Friendship(models.Model):
     friend_one = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_one')
     friend_two = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_two')
+
+
+class UserFriends(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    friends = models.IntegerField(default=0)
 
 
 class Like(models.Model):

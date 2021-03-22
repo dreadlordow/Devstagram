@@ -32,8 +32,8 @@ def get_chats(request):
         chatrooms = chatrooms.order_by('-last_msg_time')
         user_ids = chatrooms.values_list('user_one', 'user_two')
         user_ids = set(chain(*user_ids))
-        if user.id in user_ids:
-            user_ids.remove(user.id)
+        # if user.id in user_ids:
+        #     user_ids.remove(user.id)
         users = User.objects.filter(id__in=user_ids)
         return {'chats': chatrooms, 'users': users, 'chatroom_user': zip(chatrooms, users)}
     return {}
