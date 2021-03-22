@@ -27,6 +27,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
     def create_message(self, chatroom, sender, message):
         message_created = Message.objects.create(chatroom=chatroom, sender=sender, message=message)
         chatroom.update_last_msg_time()
+        return message_created
 
     async def connect(self):
         self.room_name = self.scope['url_route']['kwargs']['user_one'] + '-' + self.scope['url_route']['kwargs']['user_two']
@@ -46,43 +47,47 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         )
 
     async def receive(self, text_data=None, bytes_data=None):
-            text_data_json = json.loads(text_data)
-            message = text_data_json['message']
-            username = text_data_json['sender']
-            receiver = text_data_json['receiver']
+        text_data_json = json.loads(text_data)
+        message = text_data_json['message']
+        username = text_data_json['sender']
+        receiver = text_data_json['receiver']
 
-            user = await self.get_user(username)
-            receiver = await self.get_user(receiver)
+        user = await self.get_user(username)
+        receiver = await self.get_user(receiver)
 
-            chatroom = await self.get_chatroom(user, receiver)
-            await self.create_message(chatroom, user, message)
+        chatroom = await self.get_chatroom(user, receiver)
+        created_message = await self.create_message(chatroom, user, message)
+        timestamp_obj = created_message.timestamp
+        timestamp = f'{timestamp_obj.hour}:{timestamp_obj.minute}'
 
-            picture = await self.get_picture(user)
-            receiver_picture = await self.get_picture(receiver)
+        picture = await self.get_picture(user)
+        receiver_picture = await self.get_picture(receiver)
 
+        picture_url = picture.image.url
+        receiver_picture_url = receiver_picture.image.url
 
-            picture_url = picture.image.url
-            receiver_picture_url = receiver_picture.image.url
-
-            await self.channel_layer.group_send(
-                self.room_group_name,
-                {
-                    'type': 'chatroom_message',
-                    'message': message,
-                    'username': username,
-                    'pictureurl': picture_url,
-                    'receiver_picture_url': receiver_picture_url
-                }
-            )
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'chatroom_message',
+                'message': message,
+                'username': username,
+                'pictureurl': picture_url,
+                'receiver_picture_url': receiver_picture_url,
+                'timestamp': timestamp
+            }
+        )
 
     async def chatroom_message(self, event):
         message = event['message']
         username = event['username']
         pictureurl = event['pictureurl']
         receiver_picture_url = event['receiver_picture_url']
+        timestamp = event['timestamp']
         await self.send(text_data=json.dumps({
             'message': message,
             'username': username,
             'pictureurl': pictureurl,
-            'receiver_picture_url': receiver_picture_url
+            'receiver_picture_url': receiver_picture_url,
+            'timestamp': timestamp
         }))

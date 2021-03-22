@@ -2,46 +2,53 @@
 {% load static %}
 {% block title %}{{ user.username }}'s profile{% endblock %}
 {% block styles %}
-    <link rel="stylesheet" href="{% static 'css/profile.css' %}">{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 {% block content %}
-    <div>
-        <h4 style="margin-left: 45%">{{ user.username }}</h4>
-        <div class="img-container">
-            <img class="pfp" src="{{ profile_picture.image.url }}">
+    <div class="profile-data">
+        <div class="profile-info-div">
+            <h4 style="margin-left: 45%">{{ user.username }}</h4>
+            <div class="img-container">
+                <img class="pfp" src="{{ profile_picture.image.url }}">
 
-            <div class="middle">
-                {% if request.user == user %}
-                    <a href="{% url 'upload pfp' %}">Change profile picture</a>
-                {% endif %}
+                <div class="middle">
+                    {% if request.user == user %}
+                        <a href="{% url 'upload pfp' %}">Change profile picture</a>
+                    {% endif %}
+                </div>
+
             </div>
-
         </div>
-    </div>
-    <p style="margin-left: 48%; color:white;">{{ friends.count }} friends</p>
-    {% if user != request.user and friendship == False %}
-        <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
-            {% csrf_token %}
-            <input id="sender" type="hidden" name="sender" value="{{ request.user }}">
-            <input id="receiver" type="hidden" name="receiver" value="{{ user }}">
-            {% if not is_friend_request_sent %}
-                <button type="submit">Send friend request</button>
-            {% else %}
-                <button type="submit"> Unsend request</button>
-            {% endif %}
-        </form>
-    {% else %}
-        <form method="post" action="{% url 'asyncroom' request.user.username user.username %}">
-            {% csrf_token %}
-            <button class="btn btn-primary send-btn">Send message</button>
-        </form>
-        <ul class="container">
-            {% for picture in pictures %}
-                <li class="item">
-                    <img src="{{ picture.picture.url }}">
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+        <p style="margin-left: 48%; color:white;">{{ friends.count }} friends</p>
+        {% if user != request.user and friendship == False %}
+            <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
+                {% csrf_token %}
+                <input id="sender" type="hidden" name="sender" value="{{ request.user }}">
+                <input id="receiver" type="hidden" name="receiver" value="{{ user }}">
+                <div style="place-items: center">
+                    {% if not is_friend_request_sent %}
+                        <button class="friend-request">Send friend request</button>
+                    {% else %}
+                        <button class="friend-request"> Unsend request</button>
+                    {% endif %}
+                </div>
+            </form>
+            </div>
+        {% else %}
+            <form method="post" action="{% url 'asyncroom' request.user.username user.username %}">
+                {% csrf_token %}
+                <button class="btn btn-primary send-btn">Send message</button>
+            </form>
+            <ul class="container">
+                {% for picture in pictures %}
+                    <li class="item">
+                        <a href="{% url 'picture display' picture.user picture.pk %}">
+                            <img src="{{ picture.picture.url }}">
+                        </a>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
 {% endblock %}
 {% block ajaxjs %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
@@ -60,7 +67,12 @@
 
                 },
                 success: function () {
-                    alert("Success")
+                    let btnText = $('.friend-request')
+                    if (btnText.text() === 'Send friend request') {
+                        btnText.text('Unsend request')
+                    } else {
+                        btnText.text('Send friend request')
+                    }
                 }
             })
         })

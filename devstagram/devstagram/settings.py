@@ -133,8 +133,16 @@ DEFAULT_FROM_EMAIL = 'georgipavlov910@gmail.com'
 EMAIL_HOST_USER = 'georgipavlov910@gmail.com'
 EMAIL_HOST_PASSWORD = 'Georgi0808'
 
+# CHANNEL_LAYERS = {
+#     'default': {
+#         'BACKEND': 'channels.layers.InMemoryChannelLayer'
+#     }
+# }
 CHANNEL_LAYERS = {
-    'default': {
-        'BACKEND': 'channels.layers.InMemoryChannelLayer'
-    }
+    "default": {
+        "CONFIG": {
+            "hosts": [('localhost','6379')],
+        },
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+    },
 }

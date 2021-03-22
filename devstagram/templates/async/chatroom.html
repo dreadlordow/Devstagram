@@ -18,9 +18,12 @@
                                         {{ message.message }}
                                     </p>
                                 </div>
-                                <span class="timestamp"><span
-                                        class="username">{{ request.user.username }}</span>&bull;<span
-                                        class="posttime">3 minutes ago</span></span>
+                                <span class="timestamp">
+                                    <span
+                                            class="username">{{ request.user.username }}</span>&bull;<span
+                                        class="posttime">{{ message.timestamp.hour }}:{{ message.timestamp.minute }}
+                                </span>
+                                </span>
                             </div>
                         </div>
                     </article>
@@ -37,7 +40,7 @@
                                 </div>
                                 <span class="timestamp"><span
                                         class="username">{{ message.sender.username }}</span>&bull;<span
-                                        class="posttime">3 minutes ago</span></span>
+                                        class="posttime">{{ message.timestamp.hour }}:{{ message.timestamp.minute }}</span></span>
                             </div>
                         </div>
                     </article>
@@ -79,7 +82,7 @@
             messageInputDom.value = ''
         }
 
-
+        // Create websocket
         const chatSocket = new WebSocket(
             'ws://' +
             window.location.host +
@@ -117,16 +120,24 @@
             $('.msg').last().text(data.message)
             $('.username').last().text(data.username)
             $('.user-img').last().attr('src', pictureUrl)
+            $('.posttime').last().text(data.timestamp)
         }
 
-        // Auto scrolldown function
+        // Auto scrolldown on load
         $(document).ready(function () {
-            $("button").click(function () {
+            $(document).scrollTop($(document).height());
+
+        });
+
+
+        // Auto scrolldown when message is sent function
+        $(document).ready(function () {
+            $("#chat-input").click(function () {
                 $(document).scrollTop($(document).height());
             });
         });
 
-        // Submit with ENTER key function
+        // Submit with ENTER-key function
         $(document).ready(function () {
             $('#chat-input').keypress(function (k) {
                 if (k.keyCode == 13)

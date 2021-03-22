@@ -7,6 +7,7 @@ h1, h2, h3, h4, h5, h6, p, li{
 }
 body{
     background: #1c1e22;
+    color: white;
 }
 
 a {
@@ -28,6 +29,12 @@ ul {
     display: inline-block;
     padding: 10px 20px;
     margin-right:2rem;
+}
+
+.logo{
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-size: 20px;
 }
 
 .item :hover {
@@ -64,4 +71,24 @@ ul {
 
 .chat-link{
     color:black
+}
+
+.chatbox-contents{
+    display: flex;
+}
+
+.chat-username{
+    margin-left: 1rem;
+    margin-top: -1rem;
+    color: black;
+}
+
+.chat-message{
+    color: #131313;
+    margin-left: 1rem;
+}
+
+.user-img-nav{
+    border-radius: 50%;
+    vertical-align: center;
 }

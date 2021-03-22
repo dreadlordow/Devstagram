@@ -50,6 +50,8 @@ class SignInView(auth_views.LoginView):
     def create_hash_url_and_code(username):
         hash_url = f'{username}' + str(hash(str(randint(1, 999))))
         code = ''
+
+        # Generate random code
         for _ in range(6):
             code += str(randint(1, 9))
         tfa = TwoFactorAuthMsg(hash_url=hash_url, two_factor_code=int(code))
@@ -68,19 +70,18 @@ class SignInView(auth_views.LoginView):
 
 @require_POST
 def two_factor(request, slug):
-    if request.method == 'POST':
-        code = int(request.POST['2fa'])
-        username = request.POST['username']
-        user = User.objects.get(username=username)
-        password = request.POST['password']
-        tfa = TwoFactorAuthMsg.objects.filter(hash_url=slug).last()
-        received_code = tfa.two_factor_code
-        if code == received_code:
-            tfa.delete()
-            login(request, user)
-            return redirect('index')
+    code = int(request.POST['2fa'])
+    username = request.POST['username']
+    user = User.objects.get(username=username)
+    password = request.POST['password']
+    tfa = TwoFactorAuthMsg.objects.filter(hash_url=slug).last()
+    received_code = tfa.two_factor_code
+    if code == received_code:
         tfa.delete()
-        return redirect('signin')
+        login(request, user)
+        return redirect('index')
+    tfa.delete()
+    return redirect('signin')
 
 
 class SignOutView(auth_views.LogoutView):

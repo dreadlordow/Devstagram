@@ -23,19 +23,19 @@
     {% block styles %}{% endblock %}
 </head>
 <body>
-<div class="alldata">
+{#<div class="alldata">#}
     <nav class="navigation">
         <ul>
-            <li class="nav-item">
-                <a href="{% url 'index' %}">Home</a>
+            <li class="nav-item logo">
+                <a href="{% url 'index' %}">Devstagram</a>
             </li>
 
-            <li class="nav-item">
-                <form method="get" action="{% url 'search' %}">
-                    <input name="q" type="text" placeholder="search">
-                    <button class="btn btn-success" type="submit">Search</button>
-                </form>
-            </li>
+            {#            <li class="nav-item">#}
+            {#                <form method="get" action="{% url 'search' %}">#}
+            {#                    <input name="q" type="text" placeholder="search">#}
+            {#                    <button class="btn btn-success" type="submit">Search</button>#}
+            {#                </form>#}
+            {#            </li>#}
 
             {% if not request.user.is_anonymous %}
 
@@ -45,16 +45,19 @@
                     <ul id="chatdropdown" class="dropdown-content">
 
                         {% for chatroom, usr in chatroom_user %}
-                            <a class="chat-link" href="{% url 'chatroom' usr.username %}">
-                                <li>
-                                    <img width="50" height="50" src="{{ usr.profilepicture_set.first.image.url }}">
-
-                                    <strong style="margin-left: 1rem; margin-top: -1rem">{{ usr.username }}</strong>
-                                    <p style="margin-left: 5rem; color: purple">{{ chatroom.message_set.last.message }}</p>
-
-                                </li>
+                            <div style="padding:10px">
+                            <a class="chat-link" href="{% url 'asyncroom' request.user.username usr.username %}">
+                                <div class="chatbox-contents">
+                                    <img class="user-img-nav" width="50" height="50"
+                                         src="{{ usr.profilepicture_set.first.image.url }}">
+                                    <div>
+                                        <strong class="chat-username">{{ usr.username }}</strong>
+                                        <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
+                                    </div>
+                                </div>
                             </a>
-                            <hr style="border: 1px solid black">
+                            </div>
+{#                            <hr style="border: 1px solid black">#}
                         {% endfor %}
 
                     </ul>
@@ -108,7 +111,7 @@
     </nav>
     {% block content %}
     {% endblock %}
-</div>
+{#</div>#}
 {% block ajaxjs %}
 {% endblock %}
 

@@ -6,7 +6,6 @@ from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.views import generic as views
 
-
 from django.contrib.auth import mixins as auth_mixins
 
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
@@ -95,7 +94,9 @@ class ProfileView(views.DetailView):
         friends = (Friendship.objects.filter(friend_one=user) | Friendship.objects.filter(
             friend_two=user)).values_list('friend_one_id', 'friend_two_id')
         friends_id = set(chain(*friends))
-        friends_id.remove(user.id)
+        if user.id in friends_id:
+            friends_id.remove(user.id)
+
         friends = User.objects.filter(id__in=friends_id)
 
         context['friends'] = friends
