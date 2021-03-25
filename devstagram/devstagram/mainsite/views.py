@@ -217,7 +217,16 @@ class CommentPictureView(auth_mixins.LoginRequiredMixin, views.View):
             'comments': comments,
             'picture': picture
         }
-        return render(request, 'picture_display.html', context)
+        return redirect('picture display', picture.user, picture_id)
+
+
+class DeleteCommentView(views.DeleteView):
+    model = Comment
+
+    def get_success_url(self):
+        pk = self.kwargs.get('pk')
+        username = self.get_object().user.username
+        return reverse_lazy('picture display', kwargs={'slug': username, 'pk':pk})
 
 
 class ProfilePictureUploadView(views.View):

@@ -12,7 +12,7 @@
     <script src="{% static 'js/base.js' %}"></script>
     <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <style>a {
-        color: black
+        color: white
     }
 
     a i {
@@ -45,6 +45,7 @@
                     <ul id="chatdropdown" class="dropdown-content">
 
                         {% for chatroom, usr in chatroom_user %}
+
                             <div style="padding:10px">
                             <a class="chat-link" href="{% url 'asyncroom' request.user.username usr.username %}">
                                 <div class="chatbox-contents">
@@ -57,7 +58,6 @@
                                 </div>
                             </a>
                             </div>
-{#                            <hr style="border: 1px solid black">#}
                         {% endfor %}
 
                     </ul>

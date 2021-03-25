@@ -1839,6 +1839,7 @@ UC/10
     </table>
     <table id="71" parent="17" name="mainsite_profilepicture">
       <ObjectId>16786</ObjectId>
+      <Outdated>1</Outdated>
       <Owner>postgres</Owner>
       <StateNumber>528</StateNumber>
     </table>

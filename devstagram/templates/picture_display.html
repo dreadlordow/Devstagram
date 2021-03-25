@@ -8,8 +8,13 @@
     <div class="container">
 
         <div class="container-item">
+
             <div class="picture-user">
-                {{ picture.user.username }}
+                <a style="color: white;" href="{% url 'profile' picture.user.username %}">
+                    <img src="{{ picture.user.profilepicture_set.first.image.url }}"
+                         width="30" height="30" style="border-radius: 50%;">
+                    {{ picture.user.username }}
+                </a>
             </div>
             <img height="400" width="400" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
             <p>{{ picture.like_set.count }} likes</p>
@@ -24,17 +29,26 @@
 
         <div class="container-item comment-box">
             {% for comment in comments %}
+
                 <div class="comment">
-
-                    <div class="picture-box">
-                        <strong>{{ comment.picture.user.username }}</strong>
-                    </div>
-
-                    <div class="comment-text">
-                        <p>{{ comment.comment }}</p>
+                    <div style="display:flex;">
+                        <img width="50" height="50" class="comment-img"
+                             src="{{ comment.user.profilepicture_set.first.image.url }}"
+                             alt="picture">
+                        <div style="margin-left: 1rem;">
+                            <strong>{{ comment.user.username }}</strong>
+                            <p>{{ comment.comment }}</p>
+                        </div>
+                        <form method="post" action="{% url 'delete comment' comment.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class=" delbtn" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+{#                                <input type="hidden" name="pk" value="{{ comment.pk }}">#}
+                            </button>
+                        </form>
                     </div>
                 </div>
-                <hr style="border: 1px solid rgba(0,0,0, 03)">
+
             {% endfor %}
         </div>
 
@@ -42,7 +56,8 @@
     <div class="comment-post">
         <form method="post" action="{% url 'comment' %}">
             {% csrf_token %}
-            {{ form }}
+            <label for="id_comment">Comment:</label>
+            <input type="text" name="comment" id="id_comment" required>
             <input type="hidden" name="pic_id" value="{{ picture.id }}">
             <button>Post</button>
         </form>
