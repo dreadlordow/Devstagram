@@ -7,7 +7,7 @@ from django.views import generic as views
 from django.contrib.auth import mixins as auth_mixins
 
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
-    CommentForm, ProfilePictureUploadForm
+    CommentForm, ProfilePictureUploadForm, SortingForm
 from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
 from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture, UserFriends
 
@@ -139,6 +139,7 @@ class CreateFriendship(views.View):
         receiver = User.objects.get(username=receiver_username)
         sender_friends, created = UserFriends.objects.get_or_create(user=sender)
         receiver_friends, created = UserFriends.objects.get_or_create(user=receiver)
+
         if request.POST['answer'] == 'accepted':
             friendship.friend_one = sender
             friendship.friend_two = receiver
@@ -263,5 +264,9 @@ class SearchView(views.View):
             for pic in user.picture_set.all():
                 likes += len(pic.likes_as_flat_list())
             all_likes.append(likes)
-        context = {'searched_users_all_likes': list(zip(users, all_likes))}
+        zipped_list = sorted(list(zip(users, all_likes)), key=lambda x:x[1])
+        print(zipped_list)
+        context = {'searched_users_all_likes':zipped_list, 'form': SortingForm()}
         return render(request, 'search.html', context)
+
+    # def post(self, request, *args, **kwargs):

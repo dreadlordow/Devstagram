@@ -4,6 +4,7 @@
     <link rel="stylesheet" href="{% static 'css/profilecard.css' %}">{% endblock %}
 {% block content %}
     <div class="wrapper">
+    {{ form }}
         {% for usr, likes in searched_users_all_likes %}
 
             <div class="frame">
@@ -17,8 +18,7 @@
                         </div>
 
                         <div class="name">
-                            <a href="{% url 'profile' usr %}" style="color:red">{
-                                { usr.username }}
+                            <a href="{% url 'profile' usr %}" style="color:red">{{ usr.username }}
                             </a>
                         </div>
 
@@ -47,7 +47,11 @@
                             <span class="parameter">Likes</span>
                         </div>
                         <div class="box">
-                            <span class="value">{{ usr.userfriends_set.first.friends }}</span>
+                            {% if  usr.userfriends_set.first.friends  > 0 %}
+                                <span class="value">{{ usr.userfriends_set.first.friends }}</span>
+                            {% else %}
+                                <span class="value">0</span>
+                            {% endif %}
                             <span class="parameter">Friends</span>
                         </div>
                     </div>

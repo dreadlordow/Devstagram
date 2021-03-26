@@ -39,3 +39,12 @@ class ProfilePictureUploadForm(forms.ModelForm):
     class Meta:
         model = ProfilePicture
         fields = ['image']
+
+
+class SortingForm(forms.Form):
+    CHOICES = (
+        ('Date Joined', 'date joined'),
+        ('Likes', 'likes'),
+        ('Friends', 'friends')
+    )
+    sort = forms.ChoiceField(choices=CHOICES)

@@ -14,18 +14,23 @@
 }
 
 .post {
-    border: 1px solid #8e44ad;
+    border: 1px solid #ca7c4e;
+    border-radius: 10%;
     margin-bottom: 1rem;
 }
 
 .picture {
     max-width: 100%;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .username {
-    float: left;
-    padding: 5px 5px;
+    float: inside;
+    padding: 10px 10px;
     font-size: 18px;
+
+    font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
 .upload-btn{
@@ -49,4 +54,7 @@
 
 a{
     color: white;
+    text-align: center;
 }
+
+img{border-radius: 5%}

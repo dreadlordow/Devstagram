@@ -16,7 +16,6 @@
                             <img class="picture" src="{{ picture.picture.url }}">
                         </a>
                         <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
-
                         {% if user.id in picture.likes_as_flat_list %}
                             <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
                                     class="fas fa-heart"></i></a>
@@ -25,8 +24,9 @@
                                     class="far fa-heart"></i></a>
 
                         {% endif %}
+                    <hr style="color: #e06215; margin:5px;">
 
-                        <p style="color:white;" class="description">{{ picture.description }}</p>
+                        <p style="color:white; margin-bottom: 5px" class="description">{{ picture.description }}</p>
                     </li>
 
                 {% endfor %}

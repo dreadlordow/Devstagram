@@ -71,7 +71,7 @@
                 {% for notification in notifications %}
                     <li>
                         {% if notification|get_class == 'FriendRequest' %}
-                            <span>{{ notification }}</span>
+                            <span style="color:black">{{ notification }}</span>
                             <form style="display: inline-block" action="{% url 'friendship' %}" method="post">
                                 {% csrf_token %}
                                 <input type="hidden" name="sender" value="{{ notification.sender.username }}">
