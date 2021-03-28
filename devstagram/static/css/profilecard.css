@@ -145,3 +145,7 @@
  .stats .parameter {
 	 font-size: 11px;
 }
+
+select {
+ font-family: 'FontAwesome', 'Second Font name'
+ }

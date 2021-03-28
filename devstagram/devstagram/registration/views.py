@@ -1,3 +1,4 @@
+from functools import cache
 from random import randint
 
 from django.contrib.auth import views as auth_views, authenticate, login
@@ -17,14 +18,13 @@ class RegisterView(views.CreateView):
     model = User
     form_class = RegisterForm
     template_name = 'registration/signup.html'
-    success_url = reverse_lazy('index')
 
     def get_success_url(self):
         username = self.request.POST['username']
         password = self.request.POST['password1']
         user = authenticate(username=username, password=password)
         login(self.request, user)
-        return self.success_url
+        return reverse_lazy('profile', kwargs={'slug': username})
 
 
 class SignInView(auth_views.LoginView):

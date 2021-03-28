@@ -1,7 +1,9 @@
 from django.contrib.auth.models import User
+from django.db.models import Case, When
 from django.http import Http404, JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
+from django.utils.datastructures import MultiValueDictKeyError
 from django.views import generic as views
 
 from django.contrib.auth import mixins as auth_mixins
@@ -253,20 +255,69 @@ class ProfilePictureUploadView(views.View):
             picture.save()
             return redirect('profile', request.user.username)
 
+#
+# class SearchView(views.View):
+#     def get(self, request, *args, **kwargs):
+#         search = request.GET['q']
+#         users = User.objects.filter(username__icontains=search)
+#         all_likes = []
+#         for user in users:
+#             likes = 0
+#             for pic in user.picture_set.all():
+#                 likes += len(pic.likes_as_flat_list())
+#             all_likes.append(likes)
+#         zipped_list = sorted(list(zip(users, all_likes)), key=lambda x:x[1])
+#         print(zipped_list)
+#         context = {'searched_users_all_likes':zipped_list, 'q': search}
+#         return render(request, 'search.html', context)
 
-class SearchView(views.View):
-    def get(self, request, *args, **kwargs):
-        search = request.GET['q']
-        users = User.objects.filter(username__icontains=search)
+
+class SearchView(views.ListView):
+    template_name = 'search.html'
+    context_object_name = 'searched_users_all_likes'
+
+    def get_users(self, users):
         all_likes = []
         for user in users:
             likes = 0
             for pic in user.picture_set.all():
                 likes += len(pic.likes_as_flat_list())
             all_likes.append(likes)
-        zipped_list = sorted(list(zip(users, all_likes)), key=lambda x:x[1])
-        print(zipped_list)
-        context = {'searched_users_all_likes':zipped_list, 'form': SortingForm()}
-        return render(request, 'search.html', context)
+        zipped_list = list(zip(users, all_likes))
+        return zipped_list
 
-    # def post(self, request, *args, **kwargs):
+    def get_queryset(self):
+        search = self.request.GET['q']
+        users = User.objects.filter(username__icontains=search)
+
+        # Sort the queryset
+        try:
+            order = self.request.GET['order']
+            if order == 'likes-asc':
+                self.queryset = sorted(self.queryset, key=lambda x: -x[1])
+            elif order == 'likes-desc':
+                self.queryset = sorted(self.queryset, key=lambda x: x[1])
+            elif 'friends' in order:
+                users_ids = [user.id for user in users]
+                if order == 'friends-asc':
+                    userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('-friends')
+                else:
+                    userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('friends')
+                sorted_user_ids = [user.user_id for user in userfriends]
+                preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(sorted_user_ids)])
+                users = User.objects.filter(pk__in=sorted_user_ids).order_by(preserved)
+            elif order == 'date-joined-asc':
+                users = users.order_by('-date_joined')
+            else:
+                users = users.order_by('date_joined')
+
+        except MultiValueDictKeyError:
+            pass
+
+        zipped_list = self.get_users(users)
+        return zipped_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['q'] = self.request.GET['q']
+        return context
