@@ -9,7 +9,7 @@ from django.views import generic as views
 from django.contrib.auth import mixins as auth_mixins
 
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
-    CommentForm, ProfilePictureUploadForm, SortingForm
+    CommentForm, ProfilePictureUploadForm
 from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
 from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture, UserFriends
 
@@ -104,8 +104,6 @@ class ProfileView(views.DetailView):
         context['friendship'] = True if friendship else False
         context['profile_picture'] = profile_picture
         context['is_friend_request_sent'] = is_friend_request_sent
-
-
         return context
 
 
@@ -180,22 +178,22 @@ class PictureDisplayView(views.DetailView):
 class PictureEditView(views.View):
 
     def get(self, request, *args, **kwargs):
-        self.pk = kwargs.get('pk')
-        self.picture = Picture.objects.get(pk=self.pk)
-        if request.user.id != self.picture.user_id:
+        pk = kwargs.get('pk')
+        picture = Picture.objects.get(pk=pk)
+        if request.user.id != picture.user_id:
             raise Http404('Access denied')
-        form = PictureUpdateForm(instance=self.picture)
-        context = {'pk': self.pk, 'form': form}
+        form = PictureUpdateForm(instance=picture)
+        context = {'pk': pk, 'form': form}
         return render(request, 'picture_edit.html', context)
 
     def post(self, request, *args, **kwargs):
-        form = PictureUpdateForm(request.POST, request.FILES, instance=self.picture)
-
+        pk = kwargs.get('pk')
+        picture = Picture.objects.get(pk=pk)
+        form = PictureUpdateForm(request.POST, request.FILES, instance=picture)
         if form.is_valid():
             edited_form = form.save(commit=False)
-
             if not request.FILES:
-                edited_form.picture = self.picture.picture
+                edited_form.picture = picture.picture
 
             edited_form.user_id = request.user.id
             edited_form.save()
@@ -227,7 +225,7 @@ class DeleteCommentView(views.DeleteView):
     model = Comment
 
     def get_success_url(self):
-        pk = self.kwargs.get('pk')
+        pk = self.request.POST['pic-pk']
         username = self.get_object().user.username
         return reverse_lazy('picture display', kwargs={'slug': username, 'pk':pk})
 
@@ -289,33 +287,37 @@ class SearchView(views.ListView):
     def get_queryset(self):
         search = self.request.GET['q']
         users = User.objects.filter(username__icontains=search)
+        self.queryset = self.get_users(users)
 
         # Sort the queryset
         try:
             order = self.request.GET['order']
-            if order == 'likes-asc':
-                self.queryset = sorted(self.queryset, key=lambda x: -x[1])
-            elif order == 'likes-desc':
-                self.queryset = sorted(self.queryset, key=lambda x: x[1])
-            elif 'friends' in order:
-                users_ids = [user.id for user in users]
-                if order == 'friends-asc':
-                    userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('-friends')
-                else:
-                    userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('friends')
-                sorted_user_ids = [user.user_id for user in userfriends]
-                preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(sorted_user_ids)])
-                users = User.objects.filter(pk__in=sorted_user_ids).order_by(preserved)
-            elif order == 'date-joined-asc':
-                users = users.order_by('-date_joined')
-            else:
-                users = users.order_by('date_joined')
-
         except MultiValueDictKeyError:
-            pass
+            order = 'date-joined-asc'
+        if order == 'likes-asc':
+            self.queryset = sorted(self.queryset, key=lambda x: -x[1])
+        elif order == 'likes-desc':
+            self.queryset = sorted(self.queryset, key=lambda x: x[1])
+        elif 'friends' in order:
+            users_ids = [user.id for user in users]
+            if order == 'friends-asc':
+                userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('-friends')
+            else:
+                userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('friends')
 
-        zipped_list = self.get_users(users)
-        return zipped_list
+            sorted_user_ids = [user.user_id for user in userfriends]
+            preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(sorted_user_ids)])
+            users = User.objects.filter(pk__in=sorted_user_ids).order_by(preserved)
+
+        elif order == 'date-joined-asc':
+            users = users.order_by('-date_joined')
+            print(users)
+        elif order =='date-joined-desc':
+            users = users.order_by('date_joined')
+            print(users)
+
+        self.queryset = self.get_users(users)
+        return self.queryset
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

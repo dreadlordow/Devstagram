@@ -1,4 +1,3 @@
-from functools import cache
 from random import randint
 
 from django.contrib.auth import views as auth_views, authenticate, login

@@ -3,6 +3,8 @@
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/picture_display.css' %}">
+    <script type="text/javascript" src="{% static 'js/like.js' %}"></script>
+
 {% endblock %}
 {% block content %}
     <div class="container">
@@ -17,12 +19,23 @@
                 </a>
             </div>
             <img height="400" width="400" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
-            <p>{{ picture.like_set.count }} likes</p>
+
+            <p>
+                {% if user.id in picture.likes_as_flat_list %}
+                    <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                            class="fas fa-heart"></i></a>
+                {% else %}
+                    <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                            class="far fa-heart"></i></a>
+
+                {% endif %}
+                <span class="like-span">{{ picture.like_set.count }} likes</span>
+            </p>
             <p>{{ picture.description }}</p>
 
             {% if request.user.id == picture.user_id %}
                 <form method="get" action="{% url 'edit' picture.pk %}" enctype="multipart/form-data">
-                    <button>Edit</button>
+                    <button class="btn btn-primary">Edit</button>
                 </form>
             {% endif %}
         </div>
@@ -43,7 +56,7 @@
                             {% csrf_token %}
                             <button type="submit" class=" delbtn" aria-label="Close">
                                 <span aria-hidden="true">&times;</span>
-{#                                <input type="hidden" name="pk" value="{{ comment.pk }}">#}
+                                <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
                             </button>
                         </form>
                     </div>
@@ -64,4 +77,38 @@
     </div>
 
 
+{% endblock %}
+{% block ajaxjs %}
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+    <script type="text/javascript">
+
+        $(".pic_pk").on('click', function (e) {
+            e.preventDefault();
+            let link = $(this).attr('href')
+            let curSpan = $(this).siblings('.like-span')
+            let curHeart = $(this).children('.fa-heart')
+            $.ajax({
+                cache: false,
+                type: 'GET',
+                url: link,
+                success: function (data) {
+                    let likes = data['likes']
+                    let userId = data['user_id']
+                    let idList = data['id_list']
+                    let action = data['action']
+                    curSpan.text(likes + ' likes')
+
+                    if (action === 'unlike') {
+                        curHeart.removeClass('fas')
+                        curHeart.addClass('far')
+                    } else {
+                        curHeart.removeClass('far')
+                        curHeart.addClass('fas')
+                    }
+                }
+            })
+
+        })
+    </script>
 {% endblock %}

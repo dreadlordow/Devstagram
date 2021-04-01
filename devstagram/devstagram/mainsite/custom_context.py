@@ -2,6 +2,7 @@ from itertools import chain
 from operator import attrgetter
 
 from django.contrib.auth.models import User
+from django.db.models import Case, When
 
 from devstagram.async_chat.models import ChatRoom
 from devstagram.mainsite.models import FriendRequest, Picture
@@ -30,10 +31,14 @@ def get_chats(request):
     if not user.is_anonymous:
         chatrooms = ChatRoom.objects.filter(user_one_id=user.id) | ChatRoom.objects.filter(user_two_id=user.id)
         chatrooms = chatrooms.order_by('-last_msg_time')
-        user_ids = chatrooms.values_list('user_one', 'user_two')
-        user_ids = set(chain(*user_ids))
-        # if user.id in user_ids:
-        #     user_ids.remove(user.id)
-        users = User.objects.filter(id__in=user_ids)
+        pairs_user_ids = chatrooms.values_list('user_one', 'user_two')
+        user_ids = []
+        for pair in pairs_user_ids:
+            pair = list(pair)
+            pair.remove(user.id)
+            if pair:
+                user_ids.append(pair[0])
+        preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(user_ids)])
+        users = User.objects.filter(pk__in=user_ids).order_by(preserved)
         return {'chats': chatrooms, 'users': users, 'chatroom_user': zip(chatrooms, users)}
     return {}

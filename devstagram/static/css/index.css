@@ -23,6 +23,8 @@
     max-width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
+    width: 400px;
+    height: 200px;
 }
 
 .username {
