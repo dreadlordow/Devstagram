@@ -253,22 +253,6 @@ class ProfilePictureUploadView(views.View):
             picture.save()
             return redirect('profile', request.user.username)
 
-#
-# class SearchView(views.View):
-#     def get(self, request, *args, **kwargs):
-#         search = request.GET['q']
-#         users = User.objects.filter(username__icontains=search)
-#         all_likes = []
-#         for user in users:
-#             likes = 0
-#             for pic in user.picture_set.all():
-#                 likes += len(pic.likes_as_flat_list())
-#             all_likes.append(likes)
-#         zipped_list = sorted(list(zip(users, all_likes)), key=lambda x:x[1])
-#         print(zipped_list)
-#         context = {'searched_users_all_likes':zipped_list, 'q': search}
-#         return render(request, 'search.html', context)
-
 
 class SearchView(views.ListView):
     template_name = 'search.html'

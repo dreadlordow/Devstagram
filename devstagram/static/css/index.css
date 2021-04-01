@@ -35,6 +35,19 @@
     font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
+.description{
+    color:white;
+    margin-bottom: 10px;
+    overflow: hidden;
+    word-break: break-all;
+}
+
+.pic-send-btn{
+    background: none;
+    border: none;
+    color: white;
+}
+
 .upload-btn{
     margin-top: 1rem;
     margin-bottom: 1rem;

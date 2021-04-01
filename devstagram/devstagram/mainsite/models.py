@@ -39,6 +39,9 @@ class Friendship(models.Model):
     friend_one = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_one')
     friend_two = models.ForeignKey(User, on_delete=models.CASCADE, related_name='friend_two')
 
+    def __str__(self):
+        return f'{self.friend_one} and {self.friend_two}'
+
 
 class UserFriends(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -50,11 +53,17 @@ class Like(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     time = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return f'{self.user.username} liked {self.picture.user.username}\'s picture'
+
 
 class Comment(models.Model):
     picture = models.ForeignKey(Picture, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     comment = models.TextField(blank=False)
+
+    def __str__(self):
+        return f'{self.user.username} commented {self.picture.user.username}\'s picture'
 
 
 class ProfilePicture(models.Model):
