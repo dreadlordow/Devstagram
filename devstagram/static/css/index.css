@@ -1,5 +1,5 @@
 .container {
-    width: 30%;
+    width: 35%;
     place-items: center;
     justify-self: center;
     justify-content: center;
@@ -24,7 +24,7 @@
     margin-top: 10px;
     margin-bottom: 10px;
     width: 400px;
-    height: 200px;
+    height: 250px;
 }
 
 .username {
@@ -73,3 +73,15 @@ a{
 }
 
 img{border-radius: 5%}
+
+.pic-send-box{
+    width: 200px;
+
+}
+
+.hidden{
+    display: none;
+}
+.visible {
+    display:flex;
+}

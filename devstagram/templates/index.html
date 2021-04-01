@@ -24,9 +24,19 @@
                                     class="far fa-heart"></i></a>
 
                         {% endif %}
-                    <span><button class="fas fa-paper-plane pic-send-btn"></button></span>
+                    <span>
+                        <button class="fas fa-paper-plane pic-send-btn"></button>
+                    </span>
+                    <div class="pic-send-box hidden">
+                    <form>
+                        {% for friend in friends %}
+                            <input type="checkbox" id="{{ friend.username }}" name="send-to" value="{{ friend.username }}">
+                            <label for="{{ friend.username }}">{{ friend.username }}</label>
+                            {% endfor %}
+                    <button>Send</button>
+                    </form>
+                    </div>
                     <hr style="color: #e06215; margin:5px;">
-
                         <p class="description">{{ picture.description }}</p>
                     </li>
 
@@ -65,7 +75,15 @@
                     }
                 }
             })
+        })
+        $(".pic-send-btn").on('click', function (e){
+            let curDiv = $(this).parent('span').siblings('.pic-send-box')
+            if(curDiv.hasClass('hidden')) {
+                curDiv.removeClass('hidden').addClass('visible')
+            }else if(curDiv.hasClass('visible')){
+                curDiv.removeClass('visible').addClass('hidden')
 
+            }
         })
     </script>
 {% endblock %}

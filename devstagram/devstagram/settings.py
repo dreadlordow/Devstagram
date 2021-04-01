@@ -60,6 +60,7 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'devstagram.mainsite.custom_context.get_notifications',
                 'devstagram.mainsite.custom_context.get_chats',
+                'devstagram.mainsite.custom_context.get_friends',
             ],
         },
     },

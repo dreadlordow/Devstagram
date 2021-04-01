@@ -5,7 +5,7 @@ from django.contrib.auth.models import User
 from django.db.models import Case, When
 
 from devstagram.async_chat.models import ChatRoom
-from devstagram.mainsite.models import FriendRequest, Picture
+from devstagram.mainsite.models import FriendRequest, Picture, Friendship
 
 
 def get_notifications(request):
@@ -42,3 +42,17 @@ def get_chats(request):
         users = User.objects.filter(pk__in=user_ids).order_by(preserved)
         return {'chats': chatrooms, 'users': users, 'chatroom_user': zip(chatrooms, users)}
     return {}
+
+
+def get_friends(request):
+    user = request.user
+    if not user.is_anonymous:
+
+        friendships = Friendship.objects.filter(friend_one=user)|Friendship.objects.filter(friend_two=user)
+        friend_ids = set(chain(*friendships.values_list('friend_one', 'friend_two')))
+        friend_ids.remove(user.id)
+        friends = User.objects.filter(id__in=friend_ids)
+        return {'friends': friends}
+    return {}
+
+
