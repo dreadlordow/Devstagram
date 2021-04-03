@@ -50,7 +50,8 @@ def get_friends(request):
 
         friendships = Friendship.objects.filter(friend_one=user)|Friendship.objects.filter(friend_two=user)
         friend_ids = set(chain(*friendships.values_list('friend_one', 'friend_two')))
-        friend_ids.remove(user.id)
+        if user.id in friend_ids:
+            friend_ids.remove(user.id)
         friends = User.objects.filter(id__in=friend_ids)
         return {'friends': friends}
     return {}
