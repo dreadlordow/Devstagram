@@ -2,7 +2,7 @@ from django.urls import path
 
 from devstagram.mainsite.views import IndexView, PictureUploadView, LikePicture, ProfileView, \
     FriendRequestView, CreateFriendship, PictureDisplayView, PictureEditView, CommentPictureView, \
-    ProfilePictureUploadView, SearchView, DeleteCommentView
+    ProfilePictureUploadView, SearchView, DeleteCommentView, SendPostViaMessage
 
 urlpatterns = [
     # Register/Login page
@@ -44,4 +44,6 @@ urlpatterns = [
     # Search for users
     path('search/', SearchView.as_view(), name='search'),
 
+    # Send post via message
+    path('sendpost/', SendPostViaMessage.as_view(), name='send post'),
 ]

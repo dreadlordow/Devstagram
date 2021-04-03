@@ -1,4 +1,5 @@
 {% extends 'base.html' %}
+{% load class_tag %}
 {% load static %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/chat.css' %}">
@@ -13,11 +14,17 @@
                             <img class="user-img" id="user-0"
                                  src="{{ request.user.profilepicture_set.first.image.url }}"/>
                             <div class="flr">
+                                {% if message|get_class == 'Message' %}
                                 <div class="messages">
                                     <p class="msg" id="msg-0">
                                         {{ message.message }}
                                     </p>
                                 </div>
+                                    {% else %}
+                                    <div>
+                                        <h1>opito</h1>
+                                    </div>
+                                    {% endif %}
                                 <span class="timestamp">
                                     <span
                                             class="username">{{ request.user.username }}</span>&bull;<span

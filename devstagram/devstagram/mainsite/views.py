@@ -8,6 +8,7 @@ from django.views import generic as views
 
 from django.contrib.auth import mixins as auth_mixins
 
+from devstagram.async_chat.models import ChatRoom, PostMessage
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
     CommentForm, ProfilePictureUploadForm
 from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
@@ -307,3 +308,17 @@ class SearchView(views.ListView):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET['q']
         return context
+
+
+class SendPostViaMessage(views.View):
+    def post(self, request, *args, **kwargs):
+        pk = int(request.POST['send-to'])
+        sender = request.user
+        receiver = User.objects.get(pk=pk)
+        chatroom = ChatRoom.objects.filter(user_one=sender, user_two=receiver)|ChatRoom.objects.filter(user_one=receiver, user_two=sender)
+        chatroom = chatroom.first()
+        pic_pk = request.POST['pic-pk']
+        picture = Picture.objects.get(pk=pic_pk)
+        msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=receiver, post_image=picture)
+        msg.save()
+        return HttpResponse()
