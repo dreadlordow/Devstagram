@@ -32,6 +32,7 @@ def create_room(user_one, user_two):
         'messages': messages,
         'user_one': user_one.username,
         'user_two': user_two.username,
-        'user_two_': user_two
+        'user_two_': user_two,
+        'chatroom': chatroom
     }
     return context

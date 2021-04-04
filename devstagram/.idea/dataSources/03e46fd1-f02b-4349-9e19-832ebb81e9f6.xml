@@ -1309,6 +1309,7 @@ UC/10
     </table>
     <table id="80" parent="26" name="async_chat_postmessage">
       <ObjectId>70869</ObjectId>
+      <Outdated>1</Outdated>
       <Owner>postgres</Owner>
       <StateNumber>7400</StateNumber>
     </table>
