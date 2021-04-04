@@ -1,5 +1,6 @@
 {% load static %}
 {% load class_tag %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -53,7 +54,11 @@
                                          src="{{ usr.profilepicture_set.first.image.url }}">
                                     <div>
                                         <strong class="chat-username">{{ usr.username }}</strong>
+                                        {% if chatroom|get_last_msg == 'Message' %}
                                         <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
+                                        {% else %}
+                                            <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }} sent you a post</p>
+                                        {% endif %}
                                     </div>
                                 </div>
                             </a>

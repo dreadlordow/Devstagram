@@ -322,4 +322,5 @@ class SendPostViaMessage(views.View):
         picture = Picture.objects.get(pk=pic_pk)
         msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=receiver, post_image=picture)
         msg.save()
+        chatroom.update_last_msg_time()
         return HttpResponse()

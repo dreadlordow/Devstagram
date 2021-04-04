@@ -12,6 +12,7 @@ class ChatRoom(models.Model):
 
     def update_last_msg_time(self):
         self.last_msg_time = timezone.now()
+        self.save()
 
 
 class Message(models.Model):
