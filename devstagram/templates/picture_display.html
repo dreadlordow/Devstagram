@@ -17,9 +17,12 @@
                          width="30" height="30" style="border-radius: 50%;">
                     {{ picture.user.username }}
                 </a>
-            </div>
-            <img height="400" width="400" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
 
+            </div>
+            <img height="300" width="300" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
+
+                <div style="display:flex; justify-content: space-between">
+            <div>
             <p>
                 {% if user.id in picture.likes_as_flat_list %}
                     <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
@@ -31,14 +34,20 @@
                 {% endif %}
                 <span class="like-span">{{ picture.like_set.count }} likes</span>
             </p>
-            <p>{{ picture.description }}</p>
-
+            </div>
+            <div>
             {% if request.user.id == picture.user_id %}
                 <form method="get" action="{% url 'edit' picture.pk %}" enctype="multipart/form-data">
-                    <button class="btn btn-primary">Edit</button>
+                    <button style="padding: 1px 10px" class="btn btn-primary">Edit</button>
                 </form>
             {% endif %}
+
+
+            </div>
         </div>
+            <p class="picture-description">{{ picture.description }}</p>
+        </div>
+
 
         <div class="container-item comment-box">
             {% for comment in comments %}

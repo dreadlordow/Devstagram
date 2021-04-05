@@ -202,6 +202,13 @@ class PictureEditView(views.View):
             return redirect('index')
 
 
+class PictureDeleteView(views.DeleteView):
+    model = Picture
+    template_name = 'picture_display.html'
+    success_url = '/index/'
+
+
+
 class CommentPictureView(auth_mixins.LoginRequiredMixin, views.View):
     template_name = 'picture_display.html'
 
@@ -323,4 +330,4 @@ class SendPostViaMessage(views.View):
         msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=receiver, post_image=picture)
         msg.save()
         chatroom.update_last_msg_time()
-        return HttpResponse()
+        return redirect('index')

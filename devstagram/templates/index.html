@@ -84,6 +84,8 @@
                 }
             })
         })
+
+        {# Show the friend selection box #}
         $(".pic-send-btn").on('click', function (e) {
             var curDiv = $(this).parent('span').siblings('.pic-send-box')
             if (curDiv.hasClass('hidden')) {
@@ -93,6 +95,7 @@
 
             }
 
+            {# Send request to the backend and close the selection box #}
             $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
                 ev.preventDefault();
                 var sendTo = '';
@@ -102,7 +105,7 @@
                         sendTo = $(this).val();
                     }
                 })
-                console.log(sendTo)
+
                 $.ajax({
                     'type': 'POST',
                     'url': '/sendpost/',
@@ -111,7 +114,11 @@
                         'send-to': sendTo,
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                     },
-                    success: curDiv.removeClass('visible').addClass('hidden')
+                    success: function(data){
+                        curDiv.removeClass('visible').addClass('hidden')
+                        let navHtml = $(data).filter('nav.navigation').html()
+                        console.log($(document.getElementById('#navigation')).html(navHtml))
+                    }
                 })
 
             })

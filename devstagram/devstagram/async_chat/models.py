@@ -20,6 +20,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField()
     timestamp = models.TimeField(auto_now=True)
+    datetimestamp = models.DateTimeField(auto_now=True)
 
 
 class PostMessage(models.Model):
@@ -28,4 +29,5 @@ class PostMessage(models.Model):
     timestamp = models.TimeField(auto_now=True)
     post_owner = models.ForeignKey(User, on_delete=models.CASCADE, related_name='post_owner')
     post_image = models.ForeignKey(Picture, on_delete=models.CASCADE)
+    datetimestamp = models.DateTimeField(auto_now=True)
 
