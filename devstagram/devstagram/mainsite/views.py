@@ -208,7 +208,6 @@ class PictureDeleteView(views.DeleteView):
     success_url = '/index/'
 
 
-
 class CommentPictureView(auth_mixins.LoginRequiredMixin, views.View):
     template_name = 'picture_display.html'
 

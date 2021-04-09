@@ -54,6 +54,51 @@
     </div>
 {% endblock %}
 {% block ajaxjs %}
+
+
+{# {{ request.user.username|json_script:'username' }}#}
+{#        <script>#}
+{#            const username = JSON.parse(document.getElementById('username').textContent);#}
+{##}
+{#            const socket = new WebSocket(#}
+{#                'ws://' +#}
+{#                window.location.host +#}
+{#                '/ws/notifications/' +#}
+{#                '/'#}
+{#            );#}
+{#            console.log(socket)#}
+{##}
+{##}
+{#            socket.onopen = function (message) {#}
+{#                console.log("open", message);#}
+{#            }#}
+{##}
+{#            socket.onmessage = function (message) {#}
+                {#console.log("message", message);#}
+{#                var nl = document.querySelector('#myDropdown')#}
+{#                var el = document.createElement('li');#}
+{#                el.innerHTML = `New message`#}
+{#                nl.appendChild(el)#}
+{#                var data = JSON.parse(message.data)#}
+{#                console.log(data['username'])#}
+{#                if (data['username'] === username) {#}
+{#                    alert('new notification')#}
+{#                }#}
+{#            }#}
+{##}
+{#            socket.onerror = function (message) {#}
+{#                console.log("error", message);#}
+{#            }#}
+{##}
+{#            socket.onclose = function (message) {#}
+{#                console.log("close", message);#}
+{#            }#}
+{#        </script>#}
+
+
+
+
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
     <script type="text/javascript">
@@ -68,6 +113,7 @@
                 type: 'GET',
                 url: link,
                 success: function (data) {
+
                     let likes = data['likes']
                     let userId = data['user_id']
                     let idList = data['id_list']
@@ -81,6 +127,11 @@
                         curHeart.removeClass('far')
                         curHeart.addClass('fas')
                     }
+
+                    {#var navHtml2 = undefined#}
+                    {#    navHtml2 = $(data).filter('body.alldata').html()#}
+                    {#$(document.getElementById('#body')).html(navHtml2)#}
+                    {#console.log($(data).filter('body.alldata').html())#}
                 }
             })
         })
@@ -99,9 +150,9 @@
             $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
                 ev.preventDefault();
                 var sendTo = '';
-                $(':checkbox').each(function(){
+                $(':checkbox').each(function () {
                     var isChecked = $(this).is(':checked');
-                    if (isChecked){
+                    if (isChecked) {
                         sendTo = $(this).val();
                     }
                 })
@@ -114,10 +165,10 @@
                         'send-to': sendTo,
                         csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                     },
-                    success: function(data){
+                    success: function (data) {
                         curDiv.removeClass('visible').addClass('hidden')
                         let navHtml = $(data).filter('nav.navigation').html()
-                        console.log($(document.getElementById('#navigation')).html(navHtml))
+                        ($(document.getElementById('#navigation')).html(navHtml))
                     }
                 })
 

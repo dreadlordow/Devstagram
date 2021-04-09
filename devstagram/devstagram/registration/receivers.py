@@ -9,9 +9,11 @@ UserModel = get_user_model()
 
 
 @receiver(post_save, sender=UserModel)
-def create_user_picks(sender, instance, created,*args, **kwargs):
+def create_user_picks(sender, instance, created, *args, **kwargs):
     if created:
+        print('true')
         pfp = ProfilePicture(user=instance)
         pfp.save()
         userfriend = UserFriends(user=instance)
         userfriend.save()
+

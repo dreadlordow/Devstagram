@@ -1,7 +1,7 @@
 import json
 
 from channels.db import database_sync_to_async
-from channels.generic.websocket import AsyncWebsocketConsumer
+from channels.generic.websocket import AsyncWebsocketConsumer, WebsocketConsumer, AsyncJsonWebsocketConsumer
 from django.contrib.auth.models import User
 
 from devstagram.async_chat.models import ChatRoom, Message
@@ -24,8 +24,9 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         return chatroom[0]
 
     @database_sync_to_async
-    def create_message(self, chatroom, sender, message):
-        message_created = Message.objects.create(chatroom=chatroom, sender=sender, message=message)
+    def create_message(self, chatroom, sender, receiver, message):
+        message_created = Message(chatroom=chatroom, sender=sender, receiver=receiver ,message=message)
+        message_created.save()
         chatroom.update_last_msg_time()
         return message_created
 
@@ -56,7 +57,7 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
         receiver = await self.get_user(receiver)
 
         chatroom = await self.get_chatroom(user, receiver)
-        created_message = await self.create_message(chatroom, user, message)
+        created_message = await self.create_message(chatroom, user, receiver, message)
         timestamp_obj = created_message.timestamp
         timestamp = f'{timestamp_obj.hour}:{timestamp_obj.minute}'
 
@@ -91,3 +92,19 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
             'receiver_picture_url': receiver_picture_url,
             'timestamp': timestamp
         }))
+
+
+class NotificationConsumer(AsyncJsonWebsocketConsumer):
+    async def connect(self):
+        print('connected')
+        await self.accept()
+        await self.channel_layer.group_add('gossip', self.channel_name)
+        # await self.send({
+        #     "type": "websocket.accept"
+        # })
+
+    async def disconnect(self, code):
+        await self.channel_layer.group_discard('gossip', self.channel_name)
+
+    async def message_gossip(self, event):
+        await self.send(text_data=json.dumps(event))

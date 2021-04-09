@@ -10,8 +10,9 @@
           integrity="sha384-BmbxuPwQa2lc/FVzBcNJ7UAyJxM6wuqIj61tLrc4wSX0szH/Ev+nYRRuWlolflfl"
           crossorigin="anonymous">
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
-    <script src="{% static 'js/base.js' %}"></script>
     <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'js/base.js' %}"></script>
+    {#    <script src="{% static 'channels/js/websocketbridge.js' %}" type="text/javascript"></script>#}
     <style>a {
         color: white
     }
@@ -23,20 +24,20 @@
 
     {% block styles %}{% endblock %}
 </head>
-<body>
-{#<div class="alldata">#}
+<body class="body" id="body">
+<div class="alldata">
     <nav class="navigation" id="#navigation">
         <ul>
             <li class="nav-item logo">
                 <a href="{% url 'index' %}">Devstagram</a>
             </li>
 
-                        <li class="nav-item">
-                            <form method="get" action="{% url 'search' %}">
-                                <input name="q" type="text" placeholder="search">
-                                <button class="btn btn-success" type="submit">Search</button>
-                            </form>
-                        </li>
+            <li class="nav-item">
+                <form method="get" action="{% url 'search' %}">
+                    <input name="q" type="text" placeholder="search">
+                    <button class="btn btn-success" type="submit">Search</button>
+                </form>
+            </li>
 
             {% if not request.user.is_anonymous %}
 
@@ -48,20 +49,21 @@
                         {% for chatroom, usr in chatroom_user %}
 
                             <div style="padding:10px">
-                            <a class="chat-link" href="{% url 'asyncroom' request.user.username usr.username %}">
-                                <div class="chatbox-contents">
-                                    <img class="user-img-nav" width="50" height="50"
-                                         src="{{ usr.profilepicture_set.first.image.url }}">
-                                    <div>
-                                        <strong class="chat-username">{{ usr.username }}</strong>
-                                        {% if chatroom|get_last_msg == 'Message' %}
-                                        <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
-                                        {% else %}
-                                            <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }} sent you a post</p>
-                                        {% endif %}
+                                <a class="chat-link" href="{% url 'asyncroom' request.user.username usr.username %}">
+                                    <div class="chatbox-contents">
+                                        <img class="user-img-nav" width="50" height="50"
+                                             src="{{ usr.profilepicture_set.first.image.url }}">
+                                        <div>
+                                            <strong class="chat-username">{{ usr.username }}</strong>
+                                            {% if chatroom|get_last_msg == 'Message' %}
+                                                <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
+                                            {% else %}
+                                                <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }}
+                                                    sent you a post</p>
+                                            {% endif %}
+                                        </div>
                                     </div>
-                                </div>
-                            </a>
+                                </a>
                             </div>
                         {% endfor %}
 
@@ -116,10 +118,49 @@
     </nav>
     {% block content %}
     {% endblock %}
-
-{% block ajaxjs %}
+    {% block ajaxjs %}
 {% endblock %}
+    {% block notifjs %}
+        {{ request.user.username|json_script:'username' }}
+        <script>
+            const username = JSON.parse(document.getElementById('username').textContent);
+
+            const socket = new WebSocket(
+                'ws://' +
+                window.location.host +
+                '/ws/notifications/' +
+                '/'
+            );
+            console.log(socket)
 
 
+            socket.onopen = function (message) {
+                console.log("open", message);
+            }
+
+            socket.onmessage = function (message) {
+                {#console.log("message", message);#}
+                var nl = document.querySelector('#myDropdown')
+                var el = document.createElement('li');
+                el.innerHTML = `New message`
+                nl.appendChild(el)
+                var data = JSON.parse(message.data)
+                console.log(data['username'])
+                if (data['username'] === username) {
+                    alert('new notification')
+                }
+            }
+
+            socket.onerror = function (message) {
+                console.log("error", message);
+            }
+
+            socket.onclose = function (message) {
+                console.log("close", message);
+            }
+        </script>
+    {% endblock %}
+
+</div>
 </body>
 </html>
