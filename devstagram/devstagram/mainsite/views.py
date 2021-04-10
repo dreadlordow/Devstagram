@@ -286,13 +286,19 @@ class SearchView(views.ListView):
             order = self.request.GET['order']
         except MultiValueDictKeyError:
             order = 'date-joined-asc'
-        if order == 'likes-asc':
-            self.queryset = sorted(self.queryset, key=lambda x: -x[1])
-        elif order == 'likes-desc':
-            self.queryset = sorted(self.queryset, key=lambda x: x[1])
+        if order == 'likes-desc':
+            return sorted(self.queryset, key=lambda x: -x[1])
+        elif order == 'likes-asc':
+            return sorted(self.queryset, key=lambda x: x[1])
+
+        elif order == 'posts-asc':
+            return sorted(self.queryset, key=lambda x: x[0].picture_set.count())
+        elif order == 'posts-desc':
+            return sorted(self.queryset, key=lambda x: x[0].picture_set.count(), reverse=True)
+
         elif 'friends' in order:
             users_ids = [user.id for user in users]
-            if order == 'friends-asc':
+            if order == 'friends-desc':
                 userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('-friends')
             else:
                 userfriends = UserFriends.objects.filter(user_id__in=users_ids).order_by('friends')
@@ -301,12 +307,11 @@ class SearchView(views.ListView):
             preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(sorted_user_ids)])
             users = User.objects.filter(pk__in=sorted_user_ids).order_by(preserved)
 
-        elif order == 'date-joined-asc':
+        elif order == 'date-joined-desc':
             users = users.order_by('-date_joined')
-            print(users)
-        elif order =='date-joined-desc':
+
+        elif order =='date-joined-asc':
             users = users.order_by('date_joined')
-            print(users)
 
         self.queryset = self.get_users(users)
         return self.queryset
@@ -318,6 +323,7 @@ class SearchView(views.ListView):
 
 
 class SendPostViaMessage(views.View):
+
     def post(self, request, *args, **kwargs):
         pk = int(request.POST['send-to'])
         sender = request.user

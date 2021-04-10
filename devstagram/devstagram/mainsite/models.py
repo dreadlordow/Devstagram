@@ -20,7 +20,7 @@ class Picture(models.Model):
     description = models.TextField(max_length=80)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     upload_date = models.DateTimeField(auto_now=True)
-
+    
     def likes_as_flat_list(self):
         return self.like_set.all().values_list('user_id', flat=True)
 

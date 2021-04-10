@@ -99,12 +99,10 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
         print('connected')
         await self.accept()
         await self.channel_layer.group_add('gossip', self.channel_name)
-        # await self.send({
-        #     "type": "websocket.accept"
-        # })
 
     async def disconnect(self, code):
         await self.channel_layer.group_discard('gossip', self.channel_name)
 
     async def message_gossip(self, event):
         await self.send(text_data=json.dumps(event))
+

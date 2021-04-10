@@ -6,10 +6,12 @@ from devstagram.async_chat.models import Message
 from channels.layers import get_channel_layer
 from asgiref.sync import async_to_sync
 
-MyModel = Message
+from devstagram.mainsite.models import Like
 
+MessageModel = Message
+LikeModel = Like
 
-@receiver(post_save, sender=MyModel)
+@receiver(post_save, sender=MessageModel)
 def create_notifications(sender, instance, created, *args, **kwargs):
     if created:
         channel_layer = get_channel_layer()
@@ -17,7 +19,25 @@ def create_notifications(sender, instance, created, *args, **kwargs):
             'gossip', {
                 'type': 'message.gossip',
                 'event': 'New Message',
-                'username': instance.receiver.username
+                'notification_type': 'message',
+                'receiver': instance.receiver.username,
+                'sender': instance.sender.username
             }
         )
-        print('crewated')
+
+
+@receiver(post_save, sender=Like)
+def create_like_notification(sender, instance, created, *args, **kwargs):
+    if created:
+        channel_layer = get_channel_layer()
+        async_to_sync(channel_layer.group_send)(
+            'gossip', {
+                'type': 'message.gossip',
+                'event': 'New Message',
+                'notification_type': 'like',
+                'receiver': instance.picture.user.username,
+                'sender': instance.user.username
+            }
+        )
+
+

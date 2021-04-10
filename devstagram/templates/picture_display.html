@@ -61,6 +61,7 @@
                             <strong>{{ comment.user.username }}</strong>
                             <p>{{ comment.comment }}</p>
                         </div>
+                        {% if request.user == comment.user or request.user == picture.user %}
                         <form method="post" action="{% url 'delete comment' comment.pk %}">
                             {% csrf_token %}
                             <button type="submit" class=" delbtn" aria-label="Close">
@@ -68,6 +69,7 @@
                                 <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
                             </button>
                         </form>
+                        {% endif %}
                     </div>
                 </div>
 

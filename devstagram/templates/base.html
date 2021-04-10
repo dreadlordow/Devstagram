@@ -58,8 +58,12 @@
                                             {% if chatroom|get_last_msg == 'Message' %}
                                                 <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
                                             {% else %}
+                                                {% if request.user == chatroom.postmessage_set.last.sender %}
+                                                    <p class="chat-message">You sent a post</p>
+                                                    {% else %}
                                                 <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }}
                                                     sent you a post</p>
+                                                    {% endif %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -139,15 +143,21 @@
             }
 
             socket.onmessage = function (message) {
-                {#console.log("message", message);#}
-                var nl = document.querySelector('#myDropdown')
-                var el = document.createElement('li');
+                let nl = document.querySelector('#myDropdown')
+                let el = document.createElement('li');
                 el.innerHTML = `New message`
                 nl.appendChild(el)
-                var data = JSON.parse(message.data)
-                console.log(data['username'])
-                if (data['username'] === username) {
-                    alert('new notification')
+                let data = JSON.parse(message.data)
+                let senderUsername = data['sender']
+                let notificationType = data['notification_type']
+                console.log(data['receiver'])
+                console.log(username)
+                if (data['receiver'] == username) {
+                    if(notificationType === 'message') {
+                        alert(`${senderUsername} sent you a message`)
+                    }else{
+                        alert(`${senderUsername} liked your picture`)
+                    }
                 }
             }
 

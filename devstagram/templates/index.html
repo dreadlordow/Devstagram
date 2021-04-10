@@ -15,6 +15,10 @@
                         <a href="{% url 'picture display' picture.user.username picture.pk %}">
                             <img class="picture" src="{{ picture.picture.url }}">
                         </a>
+
+                        <p class="description">{{ picture.description }}</p>
+                        <hr style="color: #e06215; margin:5px;">
+                    <div style="padding: 8px">
                         <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
                         {% if user.id in picture.likes_as_flat_list %}
                             <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
@@ -42,9 +46,7 @@
                                 <button class="send-post">Send</button>
                             </form>
                         </div>
-
-                        <hr style="color: #e06215; margin:5px;">
-                        <p class="description">{{ picture.description }}</p>
+</div>
 
                     </li>
                 {% endfor %}
@@ -54,50 +56,6 @@
     </div>
 {% endblock %}
 {% block ajaxjs %}
-
-
-{# {{ request.user.username|json_script:'username' }}#}
-{#        <script>#}
-{#            const username = JSON.parse(document.getElementById('username').textContent);#}
-{##}
-{#            const socket = new WebSocket(#}
-{#                'ws://' +#}
-{#                window.location.host +#}
-{#                '/ws/notifications/' +#}
-{#                '/'#}
-{#            );#}
-{#            console.log(socket)#}
-{##}
-{##}
-{#            socket.onopen = function (message) {#}
-{#                console.log("open", message);#}
-{#            }#}
-{##}
-{#            socket.onmessage = function (message) {#}
-                {#console.log("message", message);#}
-{#                var nl = document.querySelector('#myDropdown')#}
-{#                var el = document.createElement('li');#}
-{#                el.innerHTML = `New message`#}
-{#                nl.appendChild(el)#}
-{#                var data = JSON.parse(message.data)#}
-{#                console.log(data['username'])#}
-{#                if (data['username'] === username) {#}
-{#                    alert('new notification')#}
-{#                }#}
-{#            }#}
-{##}
-{#            socket.onerror = function (message) {#}
-{#                console.log("error", message);#}
-{#            }#}
-{##}
-{#            socket.onclose = function (message) {#}
-{#                console.log("close", message);#}
-{#            }#}
-{#        </script>#}
-
-
-
-
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>

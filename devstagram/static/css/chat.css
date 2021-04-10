@@ -151,3 +151,15 @@ body {
     height: 50px;
     width: 50px;
 }
+
+/*.msg-remote{*/
+/*    padding-left: 10px;*/
+/*}*/
+
+.msg-remote .msg-box {
+    border-radius: 0 6px 6px 0;
+}
+
+.msg-remote .user-img {
+    margin: 0 5px 5px 5px;
+}
