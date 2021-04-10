@@ -43,6 +43,13 @@ ul {
     background-color: #23CABE;
 }
 
+.search-btn{
+    background: none;
+    border: none;
+    color: #2cc40a;
+    size: 10px;
+}
+
 .dropbtn{
     border: none;
     background: none;
@@ -93,4 +100,28 @@ ul {
 .user-img-nav{
     border-radius: 50%;
     vertical-align: center;
+}
+
+.navigation .icon{display: none}
+
+@media screen and (max-width: 800px) {
+    .navigation ul li:not(:first-child) {display: none;}
+    .navigation a.icon {
+        float:right;
+        display:block;
+    }
+}
+
+@media screen and (max-width: 800px) {
+  .navigation.responsive {position: relative;}
+  .navigation.responsive .icon {
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+  .navigation.responsive ul li {
+    float: none;
+    display: block;
+    text-align: center;
+  }
 }

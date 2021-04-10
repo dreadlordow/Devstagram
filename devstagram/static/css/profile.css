@@ -10,12 +10,14 @@ a{color: white}
 }
 
 .item {
-    flex: 1;
+    flex-shrink: inherit;
     flex-basis: 200px;
     flex-grow: 0;
-    height: 200px;
+    height: 210px;
     width: 300px;
-    border: 2px solid #fff;
+    border: 1px solid #fff;
+    margin-bottom: 15px;
+    margin-right: 1rem;
 }
 
 .item img{

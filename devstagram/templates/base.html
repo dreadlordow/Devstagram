@@ -26,7 +26,7 @@
 </head>
 <body class="body" id="body">
 <div class="alldata">
-    <nav class="navigation" id="#navigation">
+    <nav class="navigation" id="navigation">
         <ul>
             <li class="nav-item logo">
                 <a href="{% url 'index' %}">Devstagram</a>
@@ -35,7 +35,7 @@
             <li class="nav-item">
                 <form method="get" action="{% url 'search' %}">
                     <input name="q" type="text" placeholder="search">
-                    <button class="btn btn-success" type="submit">Search</button>
+                    <button class="fas fa-search search-btn" type="submit"></button>
                 </form>
             </li>
 
@@ -60,10 +60,10 @@
                                             {% else %}
                                                 {% if request.user == chatroom.postmessage_set.last.sender %}
                                                     <p class="chat-message">You sent a post</p>
-                                                    {% else %}
-                                                <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }}
-                                                    sent you a post</p>
-                                                    {% endif %}
+                                                {% else %}
+                                                    <p class="chat-message">{{ chatroom.postmessage_set.last.sender.username }}
+                                                        sent you a post</p>
+                                                {% endif %}
                                             {% endif %}
                                         </div>
                                     </div>
@@ -75,7 +75,7 @@
                 </li>
 
                 <li id="notification" class="nav-item notification">
-                <button onclick=myFunction() class="dropbtn fas fa-bell"> - {{ notifslen }}</button>
+                <button onclick=notificationsFunction() class="dropbtn fas fa-bell"> - {{ notifslen }}</button>
 
                 <ul id="myDropdown" class="dropdown-content">
 
@@ -117,13 +117,16 @@
                 <a href="{% url 'logout' %}">Logout</a>
             </li>
 
+            <a href="javascript:void(0);" class="icon" onclick="navbarFunction()">
+                <i class="fa fa-bars"></i>
+            </a>
 
         </ul>
     </nav>
     {% block content %}
     {% endblock %}
     {% block ajaxjs %}
-{% endblock %}
+    {% endblock %}
     {% block notifjs %}
         {{ request.user.username|json_script:'username' }}
         <script>
@@ -153,9 +156,9 @@
                 console.log(data['receiver'])
                 console.log(username)
                 if (data['receiver'] == username) {
-                    if(notificationType === 'message') {
+                    if (notificationType === 'message') {
                         alert(`${senderUsername} sent you a message`)
-                    }else{
+                    } else {
                         alert(`${senderUsername} liked your picture`)
                     }
                 }
@@ -169,6 +172,7 @@
                 console.log("close", message);
             }
         </script>
+
     {% endblock %}
 
 </div>
