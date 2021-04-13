@@ -14,24 +14,30 @@
 }
 
 .post {
+    display:flex;
+    flex-direction: column;
     border: 1px solid #ca7c4e;
     border-radius: 10%;
     margin-bottom: 1rem;
+    min-width: 220px;
 }
 
 .picture {
     max-width: 100%;
     margin-top: 10px;
     margin-bottom: 10px;
-    width: 100%;
+    min-width: 200px;
     height: 250px;
+}
+
+.username-link{
+    margin-top: 1rem;
 }
 
 .username {
     float: inside;
     padding: 10px 10px;
     font-size: 18px;
-
     font-family: 'Open Sans', Helvetica, sans-serif;
 }
 
@@ -75,9 +81,9 @@ a{
 img{border-radius: 5%}
 
 .pic-send-box{
-    width: 350px;
+    display: none;
+    width: 250px;
     height: 300px;
-    display: flex;
     flex-direction: row;
     bottom: 0;
     position: fixed;
@@ -97,6 +103,7 @@ img{border-radius: 5%}
 .hidden{
     display: none;
 }
-.visible {
-    display:flex;
+
+.show {
+    display: flex;
 }

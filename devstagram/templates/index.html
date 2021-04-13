@@ -10,7 +10,7 @@
             <ul>
                 {% for picture in pictures %}
                     <li class="post">
-                        <a href="{% url 'profile' picture.user %}"><span
+                        <a class="username-link" href="{% url 'profile' picture.user %}"><span
                                 class="username">{{ picture.user.username }}</span></a>
                         <a href="{% url 'picture display' picture.user.username picture.pk %}">
                             <img class="picture" src="{{ picture.picture.url }}">
@@ -18,35 +18,36 @@
 
                         <p class="description">{{ picture.description }}</p>
                         <hr style="color: #e06215; margin:5px;">
-                    <div style="padding: 8px">
-                        <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
-                        {% if user.id in picture.likes_as_flat_list %}
-                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
-                                    class="fas fa-heart"></i></a>
-                        {% else %}
-                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
-                                    class="far fa-heart"></i></a>
+                        <div style="padding: 8px">
+                            <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
+                            {% if user.id in picture.likes_as_flat_list %}
+                                <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                        class="fas fa-heart"></i></a>
+                            {% else %}
+                                <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                        class="far fa-heart"></i></a>
 
-                        {% endif %}
-                        <span>
-                        <button class="fas fa-paper-plane pic-send-btn"></button>
+                            {% endif %}
+                            <span>
+                        <button class="fas fa-paper-plane pic-send-btn" onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )"></button>
+{#                        <button class="fas fa-paper-plane pic-send-btn"></button>#}
                     </span>
-                        <div class="pic-send-box hidden">
-                            <form method="post" action="{% url 'send post' %}" class="send-form">
-                                {% csrf_token %}
-                                {% for friend in friends %}
-                                    <div class="parentclass">
-                                        <label class="box-label"
-                                               for="{{ friend.username }}">{{ friend.username }}</label>
-                                        <input class="box-input send-to" type="checkbox" id="{{ friend.username }}"
-                                               name="send-to" value="{{ friend.pk }}">
-                                    </div>
-                                {% endfor %}
-                                <input type="hidden" value="{{ picture.pk }}" name="pic-pk" class="pic-pk">
-                                <button class="send-post">Send</button>
-                            </form>
+                            <div id="pic-send-box" class="pic-send-box">
+                                <form method="post" action="{% url 'send post' %}" class="send-form">
+                                    {% csrf_token %}
+                                    {% for friend in friends %}
+                                        <div class="parentclass">
+                                            <label class="box-label"
+                                                   for="{{ friend.username }}">{{ friend.username }}</label>
+                                            <input class="box-input send-to" type="checkbox" id="{{ friend.username }}"
+                                                   name="send-to" value="{{ friend.pk }}">
+                                        </div>
+                                    {% endfor %}
+                                    <input type="hidden" value="{{ picture.pk }}" name="pic-pk" class="pic-pk">
+                                    <button type="submit" class="send-post">Send</button>
+                                </form>
+                            </div>
                         </div>
-</div>
 
                     </li>
                 {% endfor %}
@@ -97,40 +98,53 @@
         {# Show the friend selection box #}
         $(".pic-send-btn").on('click', function (e) {
             var curDiv = $(this).parent('span').siblings('.pic-send-box')
+            /*
             if (curDiv.hasClass('hidden')) {
-                curDiv.removeClass('hidden').addClass('visible')
-            } else if (curDiv.hasClass('visible')) {
-                curDiv.removeClass('visible').addClass('hidden')
+                curDiv.removeClass('hidden').addClass('show')
+            } else if (curDiv.hasClass('show')) {
+                curDiv.removeClass('show').addClass('hidden')
 
             }
 
-            {# Send request to the backend and close the selection box #}
-            $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
-                ev.preventDefault();
-                var sendTo = '';
-                $(':checkbox').each(function () {
-                    var isChecked = $(this).is(':checked');
-                    if (isChecked) {
-                        sendTo = $(this).val();
-                    }
-                })
+            window.onclick = function (event) {
+                console.log($(event.target))
+                if ($(event.target).is('.content')){
+                    curDiv.removeClass('show')
+                    curDiv.addClass('hidden')
+                }
+            }
+             */
 
-                $.ajax({
-                    'type': 'POST',
-                    'url': '/sendpost/',
-                    'data': {
-                        'pic-pk': $(this).siblings('.pic-pk').val(),
-                        'send-to': sendTo,
-                        csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                    },
-                    success: function (data) {
-                        curDiv.removeClass('visible').addClass('hidden')
-                        let navHtml = $(data).filter('nav.navigation').html()
-                        ($(document.getElementById('#navigation')).html(navHtml))
-                    }
-                })
 
-            })
-        })
+                    {# Send request to the backend and close the selection box #}
+                    $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
+                        console.log('yes')
+                        ev.preventDefault();
+                        var sendTo = '';
+                        $(':checkbox').each(function () {
+                            var isChecked = $(this).is(':checked');
+                            if (isChecked) {
+                                sendTo = $(this).val();
+                            }
+                        })
+
+                        $.ajax({
+                            'type': 'POST',
+                            'url': '/sendpost/',
+                            'data': {
+                                'pic-pk': $(this).siblings('.pic-pk').val(),
+                                'send-to': sendTo,
+                                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                            },
+                            success: function (data) {
+                                curDiv.removeClass('show').addClass('hidden')
+                                let navHtml = $(data).filter('nav.navigation').html()
+                                ($(document.getElementById('#navigation')).html(navHtml))
+                            }
+                        })
+
+                    })
+            }
+        )
     </script>
 {% endblock %}

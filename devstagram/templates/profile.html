@@ -4,10 +4,11 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
 {% endblock %}
+
 {% block content %}
     <div class="profile-data">
         <div class="profile-info-div">
-            <h4 style="margin-left: 45%">{{ user.username }}</h4>
+            <h4 style="text-align: center;">{{ user.username }}</h4>
             <div class="img-container">
                 <img class="pfp" src="{{ profile_picture.image.url }}">
 
@@ -19,7 +20,7 @@
 
             </div>
         </div>
-        <p style="margin-left: 48%; color:white;">{{ friends.count }} friends</p>
+        <p style="text-align:center; color:white;">{{ friends.count }} friends</p>
         {% if user != request.user and friendship == False %}
             <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
                 {% csrf_token %}

@@ -254,6 +254,8 @@ class ProfilePictureUploadView(views.View):
     def post(self, request, *args, **kwargs):
         current_picture = ProfilePicture.objects.get(user=request.user)
         form = ProfilePictureUploadForm(request.POST, request.FILES, instance=current_picture)
+        if not request.FILES:
+            return redirect('profile', request.user.username)
         if form.is_valid():
             picture = form.save(commit=False)
             picture.picture = request.FILES['image']
@@ -331,8 +333,10 @@ class SendPostViaMessage(views.View):
         chatroom = create_room(sender.username, receiver.username)
         chatroom = chatroom['chatroom']
         pic_pk = request.POST['pic-pk']
+        print(pic_pk)
         picture = Picture.objects.get(pk=pic_pk)
-        msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=receiver, post_image=picture)
+        owner = picture.user
+        msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=owner, post_image=picture)
         msg.save()
         chatroom.update_last_msg_time()
         return redirect('index')

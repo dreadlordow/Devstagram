@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
-<h2>Create your Devstagram account</h2>
+<h2 class="heading">Create your Devstagram account</h2>
 <form action="{% url 'register' %}" method="post" class="signup-form">
     {% csrf_token %}
     <div class="container">

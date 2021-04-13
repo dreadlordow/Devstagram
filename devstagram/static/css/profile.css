@@ -45,10 +45,10 @@ a{color: white}
     transition: .5s ease;
     width: 10%;
     height: 5%;
-
+    text-align: center;
     transform: translateY(-80px);
     font-size: 14px;
-        margin-left: auto;
+    margin-left: auto;
     margin-right: auto;
 
 }
@@ -66,15 +66,14 @@ a{color: white}
 }
 
 .send-btn{
-    margin-left: 45%;
+    margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-/*.profile-data{*/
-/*    display: flex;*/
-/*    flex-direction: ;*/
-/*    place-items: center;*/
-/*}*/
+.profile-data{
+    text-align: center;
+    justify-content: center;
+}
 
 
 #send_friend_request{
@@ -90,7 +89,7 @@ a{color: white}
     padding:10px;
     border-radius: 10%;
     border: none;
-    margin-left: 2rem;
+
 }
 
 .profile-info-div{

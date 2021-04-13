@@ -3,6 +3,9 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/profilecard.css' %}">{% endblock %}
 {% block content %}
+    {% if not searched_users_all_likes %}
+        <h3 style="text-align: center; margin-top:1rem;">No users matching your search</h3>
+    {% else %}
     <form method="get" action="{% url 'search' %}">
         <input type="hidden" name="q" value="{{ q }}">
         <select name="order">
@@ -73,4 +76,5 @@
             </div>
         {% endfor %}
     </div>
+    {% endif %}
 {% endblock %}

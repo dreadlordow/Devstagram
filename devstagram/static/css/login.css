@@ -2,3 +2,25 @@ html {
     height: 100%;
     background-image: linear-gradient(to right top, #8e44ad 0%, #3498db 100%);
 }
+
+.sign-in-div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    min-height: 100vh;
+}
+
+.sign-in-btn{
+    padding: 7px;
+    background-color: #1098ad;
+    border-radius: 5%;
+    border: none;
+    margin-top: 1rem;
+    color: honeydew;
+}
+
+.control-label{
+    color: #d6d5d5;
+    margin-bottom: 1rem;
+}
