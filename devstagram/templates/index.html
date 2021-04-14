@@ -29,9 +29,12 @@
 
                             {% endif %}
                             <span>
-                        <button class="fas fa-paper-plane pic-send-btn" onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )"></button>
-{#                        <button class="fas fa-paper-plane pic-send-btn"></button>#}
-                    </span>
+                                <button
+                                id="send-pic-btn"
+                                class="fas fa-paper-plane pic-send-btn"
+                                onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )">
+                                </button>
+                            </span>
                             <div id="pic-send-box" class="pic-send-box">
                                 <form method="post" action="{% url 'send post' %}" class="send-form">
                                     {% csrf_token %}
@@ -97,53 +100,53 @@
 
         {# Show the friend selection box #}
         $(".pic-send-btn").on('click', function (e) {
-            var curDiv = $(this).parent('span').siblings('.pic-send-box')
-            /*
-            if (curDiv.hasClass('hidden')) {
-                curDiv.removeClass('hidden').addClass('show')
-            } else if (curDiv.hasClass('show')) {
-                curDiv.removeClass('show').addClass('hidden')
+                var curDiv = $(this).parent('span').siblings('.pic-send-box')
+                /*
+                if (curDiv.hasClass('hidden')) {
+                    curDiv.removeClass('hidden').addClass('show')
+                } else if (curDiv.hasClass('show')) {
+                    curDiv.removeClass('show').addClass('hidden')
 
-            }
-
-            window.onclick = function (event) {
-                console.log($(event.target))
-                if ($(event.target).is('.content')){
-                    curDiv.removeClass('show')
-                    curDiv.addClass('hidden')
                 }
-            }
-             */
+
+                window.onclick = function (event) {
+                    console.log($(event.target))
+                    if ($(event.target).is('.content')){
+                        curDiv.removeClass('show')
+                        curDiv.addClass('hidden')
+                    }
+                }
+                 */
 
 
-                    {# Send request to the backend and close the selection box #}
-                    $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
-                        console.log('yes')
-                        ev.preventDefault();
-                        var sendTo = '';
-                        $(':checkbox').each(function () {
-                            var isChecked = $(this).is(':checked');
-                            if (isChecked) {
-                                sendTo = $(this).val();
-                            }
-                        })
-
-                        $.ajax({
-                            'type': 'POST',
-                            'url': '/sendpost/',
-                            'data': {
-                                'pic-pk': $(this).siblings('.pic-pk').val(),
-                                'send-to': sendTo,
-                                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                            },
-                            success: function (data) {
-                                curDiv.removeClass('show').addClass('hidden')
-                                let navHtml = $(data).filter('nav.navigation').html()
-                                ($(document.getElementById('#navigation')).html(navHtml))
-                            }
-                        })
-
+                {# Send request to the backend and close the selection box #}
+                $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
+                    console.log('yes')
+                    ev.preventDefault();
+                    var sendTo = '';
+                    $(':checkbox').each(function () {
+                        var isChecked = $(this).is(':checked');
+                        if (isChecked) {
+                            sendTo = $(this).val();
+                        }
                     })
+
+                    $.ajax({
+                        'type': 'POST',
+                        'url': '/sendpost/',
+                        'data': {
+                            'pic-pk': $(this).siblings('.pic-pk').val(),
+                            'send-to': sendTo,
+                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                        },
+                        success: function (data) {
+                            curDiv.removeClass('show').addClass('hidden')
+                            let navHtml = $(data).filter('nav.navigation').html()
+                            ($(document.getElementById('#navigation')).html(navHtml))
+                        }
+                    })
+
+                })
             }
         )
     </script>

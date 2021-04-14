@@ -4,9 +4,12 @@
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/picture_display.css' %}">
     <script type="text/javascript" src="{% static 'js/like.js' %}"></script>
+    <script src="{% static 'js/base.js' %}"></script>
+
 
 {% endblock %}
 {% block content %}
+
     <div class="container">
 
         <div class="container-item">
@@ -21,30 +24,48 @@
             </div>
             <img height="300" width="300" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
 
-                <div style="display:flex; justify-content: space-between">
-            <div>
-            <p>
-                {% if user.id in picture.likes_as_flat_list %}
-                    <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
-                            class="fas fa-heart"></i></a>
-                {% else %}
-                    <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
-                            class="far fa-heart"></i></a>
+            <div style="display:flex; justify-content: space-between">
+                <div>
+                    <p>
+                        {% if user.id in picture.likes_as_flat_list %}
+                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                    class="fas fa-heart"></i></a>
+                        {% else %}
+                            <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
+                                    class="far fa-heart"></i></a>
 
-                {% endif %}
-                <span class="like-span">{{ picture.like_set.count }} likes</span>
-            </p>
+                        {% endif %}
+                        <button id="show-likes-button" class="show-likes-button" onclick="showLikesBox()">
+                            <span id="like-span" class="like-span">{{ picture.like_set.count }} likes</span>
+                        </button>
+                    </p>
+
+
+                    <div id="show-likes-div" class="show-likes-div">
+                        <div>
+                            {% for like in picture.like_set.all %}
+                                <a href="{% url 'profile' like.user.username %}">
+                                    <p class="like-user-paragraph">
+                                        <img class="like-user-pfp"
+                                             src="{{ like.user.profilepicture_set.first.image.url }}">{{ like.user }}
+                                    </p>
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+
+                </div>
+                <div>
+                    {% if request.user.id == picture.user_id %}
+                        <form method="get" action="{% url 'edit' picture.pk %}" enctype="multipart/form-data">
+                            <button style="padding: 1px 10px" class="btn btn-primary">Edit</button>
+                        </form>
+                    {% endif %}
+
+
+                </div>
             </div>
-            <div>
-            {% if request.user.id == picture.user_id %}
-                <form method="get" action="{% url 'edit' picture.pk %}" enctype="multipart/form-data">
-                    <button style="padding: 1px 10px" class="btn btn-primary">Edit</button>
-                </form>
-            {% endif %}
-
-
-            </div>
-        </div>
             <p class="picture-description">{{ picture.description }}</p>
         </div>
 
@@ -62,13 +83,13 @@
                             <p>{{ comment.comment }}</p>
                         </div>
                         {% if request.user == comment.user or request.user == picture.user %}
-                        <form method="post" action="{% url 'delete comment' comment.pk %}">
-                            {% csrf_token %}
-                            <button type="submit" class=" delbtn" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                                <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
-                            </button>
-                        </form>
+                            <form method="post" action="{% url 'delete comment' comment.pk %}">
+                                {% csrf_token %}
+                                <button type="submit" class=" delbtn" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                    <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
+                                </button>
+                            </form>
                         {% endif %}
                     </div>
                 </div>
@@ -97,8 +118,9 @@
         $(".pic_pk").on('click', function (e) {
             e.preventDefault();
             let link = $(this).attr('href')
-            let curSpan = $(this).siblings('.like-span')
+            let curSpan = $(this).siblings('.show-likes-button').children('.like-span')
             let curHeart = $(this).children('.fa-heart')
+            console.log(curSpan)
             $.ajax({
                 cache: false,
                 type: 'GET',
@@ -121,5 +143,23 @@
             })
 
         })
+
+        function showLikesBox() {
+            document.getElementById("show-likes-div").classList.toggle('show')
+            $(document.getElementById("transperant-container")).removeClass('hidden')
+            $(document.getElementById("transperant-container")).addClass('visible')
+            window.onclick = function(event){
+                if (event.target.id !== "show-likes-div" && event.target.id !== 'like-span'){
+                    let likeDiv = document.getElementById("show-likes-div")
+                    if($(likeDiv).hasClass('show')) {
+                        likeDiv.classList.toggle('show')
+                    }
+                    $(document.getElementById("transperant-container")).removeClass('visible')
+                    $(document.getElementById("transperant-container")).addClass('hidden')
+
+                }
+            }
+        }
+
     </script>
 {% endblock %}

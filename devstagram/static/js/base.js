@@ -1,22 +1,22 @@
-function popUpFunction(el, secEl=undefined) {
+function popUpFunction(el, secEl = undefined) {
     let element = undefined
-    switch (el){
-        case 'nav':
-            targetEl = 'myDropDown'
-            element =  document.getElementById('myDropdown')
+    switch (el) {
+        case 'notif':
+            element = document.getElementById('notificationsDropdown')
             break;
         case 'chat':
-            element =  document.getElementById('chatdropdown')
+            element = document.getElementById('chatdropdown')
             break;
         case 'picSend':
-            element =  secEl.get(0)
+            element = secEl.get(0)
             break;
     }
     element.classList.toggle("show");
-    window.onclick = function(event){
-
-        if ($(event.target).is('.content')){
-            if(element.classList.contains("show")) {
+    window.onclick = function (event) {
+        let target = event.target
+        let targetIds = ['notif-btn', 'pic-send-box', 'chat-btn', 'send-pic-btn', 'chatdropdown']
+        if(targetIds.includes(target.id) === false){
+           if (element.classList.contains("show")) {
                 element.classList.toggle("show");
                 return
             }
@@ -40,7 +40,6 @@ function navbarFunction() {
 //         console.log('yes')
 //     }
 // }
-
 
 
 // function notificationsFunction() {
@@ -102,10 +101,10 @@ function navbarFunction() {
 // }
 
 
-
-function sendPicFunc(){
+function sendPicFunc() {
     document.getElementById("pic-send-box").classList.toggle("show")
 }
+
 //
 // window.onclick = function (event) {
 //     if (!event.target.matches('.pic-send-btn')) {
