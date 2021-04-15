@@ -19,7 +19,25 @@
                         <p class="description">{{ picture.description }}</p>
                         <hr style="color: #e06215; margin:5px;">
                         <div style="padding: 8px">
-                            <span style="color:white;" class="like-span">{{ picture.like_set.count }} likes</span>
+                            <button id="show-likes-button" class="show-likes-button">
+                                <span id="like-span" class="like-span">{{ picture.like_set.count }} likes</span>
+                            </button>
+
+                            <div id="show-likes-div" class="show-likes-div">
+
+                                {% for like in picture.like_set.all %}
+                                    <a href="{% url 'profile' like.user.username %}">
+                                        <p class="like-user-paragraph">
+                                            <img class="like-user-pfp"
+                                                 src="{{ like.user.profilepicture_set.first.image.url }}">{{ like.user }}
+                                        </p>
+                                    </a>
+                                {% endfor %}
+
+                            </div>
+
+
+
                             {% if user.id in picture.likes_as_flat_list %}
                                 <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
                                         class="fas fa-heart"></i></a>
@@ -30,13 +48,13 @@
                             {% endif %}
                             <span>
                                 <button
-                                id="send-pic-btn"
-                                class="fas fa-paper-plane pic-send-btn"
-                                onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )">
+                                        id="send-pic-btn"
+                                        class="fas fa-paper-plane pic-send-btn"
+                                        onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )">
                                 </button>
                             </span>
                             <div id="pic-send-box" class="pic-send-box">
-                                <form method="post" action="{% url 'send post' %}" class="send-form">
+                                <form id="send-form" method="post" action="{% url 'send post' %}" class="send-form">
                                     {% csrf_token %}
                                     {% for friend in friends %}
                                         <div class="parentclass">
@@ -67,15 +85,22 @@
 
         $(".pic_pk").on('click', function (e) {
             e.preventDefault();
+            console.log('prevented')
             let link = $(this).attr('href')
-            let curSpan = $(this).siblings('.like-span')
+            let curSpan = $(this).siblings('.show-likes-button').children('.like-span')
             let curHeart = $(this).children('.fa-heart')
             $.ajax({
                 cache: false,
                 type: 'GET',
                 url: link,
                 success: function (data) {
-
+                    {#console.log('here')#}
+                    {#let oldBody = document.getElementsByTagName("BODY")[0]#}
+                    {#let newHtml = document.createElement('html');#}
+                    {#newHtml.innerHTML = data#}
+                    {#let newBody = newHtml.getElementsByTagName("BODY")[0]#}
+                    {#oldBody.innerHTML = newBody.innerHTML#}
+                    {#console.log('close')#}
                     let likes = data['likes']
                     let userId = data['user_id']
                     let idList = data['id_list']
@@ -90,10 +115,6 @@
                         curHeart.addClass('fas')
                     }
 
-                    {#var navHtml2 = undefined#}
-                    {#    navHtml2 = $(data).filter('body.alldata').html()#}
-                    {#$(document.getElementById('#body')).html(navHtml2)#}
-                    {#console.log($(data).filter('body.alldata').html())#}
                 }
             })
         })
@@ -101,36 +122,22 @@
         {# Show the friend selection box #}
         $(".pic-send-btn").on('click', function (e) {
                 var curDiv = $(this).parent('span').siblings('.pic-send-box')
-                /*
-                if (curDiv.hasClass('hidden')) {
-                    curDiv.removeClass('hidden').addClass('show')
-                } else if (curDiv.hasClass('show')) {
-                    curDiv.removeClass('show').addClass('hidden')
-
-                }
-
-                window.onclick = function (event) {
-                    console.log($(event.target))
-                    if ($(event.target).is('.content')){
-                        curDiv.removeClass('show')
-                        curDiv.addClass('hidden')
-                    }
-                }
-                 */
-
-
+                $(this).off('click')
                 {# Send request to the backend and close the selection box #}
-                $(this).parent('span').siblings('.pic-send-box').children('.send-form').children('.send-post').on('click', function (ev) {
-                    console.log('yes')
-                    ev.preventDefault();
-                    var sendTo = '';
-                    $(':checkbox').each(function () {
-                        var isChecked = $(this).is(':checked');
-                        if (isChecked) {
-                            sendTo = $(this).val();
-                        }
-                    })
-
+                $(this).parent('span')
+                        .siblings('.pic-send-box')
+                        .children('.send-form')
+                        .children('.send-post')
+                        .on('click', function (ev) {
+                            console.log('yes')
+                            ev.preventDefault();
+                            var sendTo = '';
+                            $(':checkbox').each(function () {
+                                var isChecked = $(this).is(':checked');
+                                if (isChecked) {
+                                    sendTo = $(this).val();
+                                     }
+                            })
                     $.ajax({
                         'type': 'POST',
                         'url': '/sendpost/',
@@ -140,14 +147,42 @@
                             csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
                         },
                         success: function (data) {
-                            curDiv.removeClass('show').addClass('hidden')
-                            let navHtml = $(data).filter('nav.navigation').html()
-                            ($(document.getElementById('#navigation')).html(navHtml))
+                            curDiv.removeClass('show')
+                            let newHtml = document.createElement('html')
+                            newHtml.innerHTML = data
+                            let navHtml = newHtml.getElementsByTagName("NAV")[0]
+                            console.log(navHtml.innerHTML)
+                            let oldNav = document.getElementById('navigation')
+                            oldNav.innerHTML = navHtml.innerHTML
+
                         }
                     })
 
                 })
             }
         )
+
+        $('.show-likes-button').on('click', function (e) {
+            let likeDiv = $(this).siblings('.show-likes-div').get(0)
+            likeDiv.classList.toggle('show')
+            {#document.body.style.position = 'fixed';#}
+            document.body.style.overflow = 'hidden';
+
+
+            $(document.getElementById("transperant-container")).removeClass('hidden')
+            $(document.getElementById("transperant-container")).addClass('visible')
+            window.onclick = function (event) {
+                if (event.target.id !== "show-likes-div" && event.target.id !== 'like-span') {
+                    if ($(likeDiv).hasClass('show')) {
+                        likeDiv.classList.toggle('show')
+                    }
+                    $(document.getElementById("transperant-container")).removeClass('visible')
+                    $(document.getElementById("transperant-container")).addClass('hidden')
+                    document.body.style.overflow = '';
+
+
+                }
+            }
+        })
     </script>
 {% endblock %}

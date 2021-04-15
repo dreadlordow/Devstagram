@@ -1,3 +1,4 @@
+
 html, body, h1, h2, h3, h4, h5, h6, p, li, ol, ul, pre {
 	margin: 0;
 	padding: 0;
@@ -9,6 +10,7 @@ body{
 }
 
 a {text-decoration: none;}
+
 a:hover{color:white}
 
 ul {
@@ -28,7 +30,6 @@ ul {
     margin-right:2rem;
     position: relative;
 }
-
 
 
 .logo{
@@ -130,3 +131,58 @@ ul {
       transform: translate(50px, -20px);
   }
 }
+
+
+.show-likes-button {
+    border: none;
+    background: none;
+    color: white;
+    margin-left:1rem;
+}
+
+.show-likes-div {
+    display: none;
+    width: 300px;
+    height: 350px;
+    background: ghostwhite;
+    z-index: 10;
+    overflow-y: scroll;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: flex-start;
+
+}
+
+.like-user-pfp {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 1rem;
+}
+
+.like-user-paragraph {
+    margin-top: 1rem;
+    color:black;
+    margin-left: 5px;
+}
+
+.show {
+    display: block;
+}
+
+.transperant-container{
+    width: 100%;
+    min-height: 100%;
+    opacity: 0.3;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgb(87,87,87);
+
+}
+
+.hidden{visibility: hidden;}
+.visible{visibility: visible;}

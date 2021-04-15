@@ -14,9 +14,13 @@ function popUpFunction(el, secEl = undefined) {
     element.classList.toggle("show");
     window.onclick = function (event) {
         let target = event.target
+        console.log(target.nodeName)
         let targetIds = ['notif-btn', 'pic-send-box', 'chat-btn', 'send-pic-btn', 'chatdropdown']
-        if(targetIds.includes(target.id) === false){
-           if (element.classList.contains("show")) {
+        if (target.nodeName === "INPUT"){
+
+        }
+        else if (targetIds.includes(target.id) === false){
+            if (element.classList.contains("show")) {
                 element.classList.toggle("show");
                 return
             }
@@ -33,6 +37,10 @@ function navbarFunction() {
         x.className = "navigation";
     }
 }
+
+
+
+
 
 // window.onclick = function(event){
 //     if ($(event.target).is('.sendpost')){
