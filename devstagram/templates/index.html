@@ -76,6 +76,7 @@
 
         </div>
     </div>
+
 {% endblock %}
 {% block ajaxjs %}
 
@@ -85,7 +86,6 @@
 
         $(".pic_pk").on('click', function (e) {
             e.preventDefault();
-            console.log('prevented')
             let link = $(this).attr('href')
             let curSpan = $(this).siblings('.show-likes-button').children('.like-span')
             let curHeart = $(this).children('.fa-heart')
@@ -94,17 +94,16 @@
                 type: 'GET',
                 url: link,
                 success: function (data) {
-                    {#console.log('here')#}
-                    {#let oldBody = document.getElementsByTagName("BODY")[0]#}
-                    {#let newHtml = document.createElement('html');#}
-                    {#newHtml.innerHTML = data#}
-                    {#let newBody = newHtml.getElementsByTagName("BODY")[0]#}
-                    {#oldBody.innerHTML = newBody.innerHTML#}
-                    {#console.log('close')#}
-                    let likes = data['likes']
-                    let userId = data['user_id']
-                    let idList = data['id_list']
-                    let action = data['action']
+                    let newHtml = document.createElement('html');
+                    newHtml.innerHTML = data['template']
+                    let oldDivs = document.getElementsByClassName('show-likes-div')
+                    let newDiv = newHtml.getElementsByClassName('show-likes-div')
+                    oldDivs[0].innerHTML = newDiv[0].innerHTML
+                    
+                    let likes = data['context']['likes']
+                    let userId = data['context']['user_id']
+                    let idList = data['context']['id_list']
+                    let action = data['context']['action']
                     curSpan.text(likes + ' likes')
 
                     if (action === 'unlike') {
@@ -119,56 +118,55 @@
             })
         })
 
-        {# Show the friend selection box #}
         $(".pic-send-btn").on('click', function (e) {
                 var curDiv = $(this).parent('span').siblings('.pic-send-box')
-                $(this).off('click')
-                {# Send request to the backend and close the selection box #}
+                $(this).off('click') // Prevent AJAX request firing multiple times
+
+                // Get the selected users from the form
                 $(this).parent('span')
-                        .siblings('.pic-send-box')
-                        .children('.send-form')
-                        .children('.send-post')
-                        .on('click', function (ev) {
-                            console.log('yes')
-                            ev.preventDefault();
-                            var sendTo = '';
-                            $(':checkbox').each(function () {
-                                var isChecked = $(this).is(':checked');
-                                if (isChecked) {
-                                    sendTo = $(this).val();
-                                     }
-                            })
-                    $.ajax({
-                        'type': 'POST',
-                        'url': '/sendpost/',
-                        'data': {
-                            'pic-pk': $(this).siblings('.pic-pk').val(),
-                            'send-to': sendTo,
-                            csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
-                        },
-                        success: function (data) {
-                            curDiv.removeClass('show')
-                            let newHtml = document.createElement('html')
-                            newHtml.innerHTML = data
-                            let navHtml = newHtml.getElementsByTagName("NAV")[0]
-                            console.log(navHtml.innerHTML)
-                            let oldNav = document.getElementById('navigation')
-                            oldNav.innerHTML = navHtml.innerHTML
+                    .siblings('.pic-send-box')
+                    .children('.send-form')
+                    .children('.send-post')
+                    .on('click', function (ev) {
+                        ev.preventDefault();
+                        var sendTo = '';
+                        $(':checkbox').each(function () {
+                            var isChecked = $(this).is(':checked');
+                            if (isChecked) {
+                                sendTo = $(this).val();
+                            }
+                        })
+                        //Send request to the server
+                        $.ajax({
+                            'type': 'POST',
+                            'url': '/sendpost/',
+                            'data': {
+                                'pic-pk': $(this).siblings('.pic-pk').val(),
+                                'send-to': sendTo,
+                                csrfmiddlewaretoken: $('input[name=csrfmiddlewaretoken]').val()
+                            },
+                            // Hide the form div and update the navbar
+                            success: function (data) {
+                                curDiv.removeClass('show')
+                                let newHtml = document.createElement('html')
+                                newHtml.innerHTML = data
+                                let navHtml = newHtml.getElementsByTagName("NAV")[0]
+                                console.log(navHtml.innerHTML)
+                                let oldNav = document.getElementById('navigation')
+                                oldNav.innerHTML = navHtml.innerHTML
 
-                        }
+                            }
+                        })
+
+
                     })
-
-                })
             }
         )
 
         $('.show-likes-button').on('click', function (e) {
             let likeDiv = $(this).siblings('.show-likes-div').get(0)
             likeDiv.classList.toggle('show')
-            {#document.body.style.position = 'fixed';#}
             document.body.style.overflow = 'hidden';
-
-
             $(document.getElementById("transperant-container")).removeClass('hidden')
             $(document.getElementById("transperant-container")).addClass('visible')
             window.onclick = function (event) {

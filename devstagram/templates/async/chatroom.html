@@ -103,7 +103,7 @@
         const user_one = JSON.parse(document.getElementById('user_one').textContent);
         const user_two = JSON.parse(document.getElementById('user_two').textContent);
 
-        // Send data to back-end
+        // Send data to server
         document.querySelector('#submit').onclick = function (e) {
             const messageInputDom = document.querySelector('#input')
             const message = messageInputDom.value;
@@ -124,7 +124,7 @@
             '/'
         );
 
-        // Receive data from back-end
+        // Receive data from server
         chatSocket.onmessage = function (e) {
             const data = JSON.parse(e.data);
             let username = data.username

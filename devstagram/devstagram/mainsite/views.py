@@ -1,10 +1,12 @@
 from django.contrib.auth.models import User
 from django.db.models import Case, When
-from django.http import Http404, JsonResponse, HttpResponse, HttpResponseRedirect
+from django.http import Http404, JsonResponse
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.datastructures import MultiValueDictKeyError
 from django.views import generic as views
+from django.views.generic.base import ContextMixin
+from django.template import loader
 
 from django.contrib.auth import mixins as auth_mixins
 
@@ -12,10 +14,18 @@ from devstagram.async_chat.models import ChatRoom, PostMessage
 from devstagram.async_chat.utils.room_create import create_room
 from devstagram.mainsite.forms import PictureUploadForm, FriendRequestForm, FriendshipForm, PictureUpdateForm, \
     CommentForm, ProfilePictureUploadForm
-from devstagram.mainsite.mixins.notificationmixin import NotificationMixin
 from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship, Comment, ProfilePicture, UserFriends
 
 from itertools import chain
+
+
+def get_pictures(user):
+    friends = (Friendship.objects.filter(friend_one=user) | Friendship.objects.filter(
+        friend_two=user)).values_list('friend_one_id', 'friend_two_id')
+    friends = set(chain(*friends))
+    friends.add(user)
+    queryset = Picture.objects.filter(user_id__in=friends).order_by('-upload_date')
+    return queryset
 
 
 class IndexView(views.ListView):
@@ -32,11 +42,7 @@ class IndexView(views.ListView):
     def get_queryset(self):
         user = self.request.user
         if not user.is_anonymous:
-            friends = (Friendship.objects.filter(friend_one=user) | Friendship.objects.filter(
-                friend_two=user)).values_list('friend_one_id', 'friend_two_id')
-            friends = set(chain(*friends))
-            friends.add(user)
-            self.queryset = Picture.objects.filter(user_id__in=friends).order_by('-upload_date')
+            self.queryset = get_pictures(user)
             return self.queryset
 
 
@@ -52,12 +58,12 @@ class PictureUploadView(auth_mixins.LoginRequiredMixin, views.CreateView):
         return super().form_valid(form)
 
 
-class LikePicture(auth_mixins.LoginRequiredMixin,NotificationMixin ,views.View):
+class LikePicture(auth_mixins.LoginRequiredMixin, ContextMixin, views.View):
     def get(self, request, *args, **kwargs):
         picture = Picture.objects.get(pk=kwargs['pk'])
-        user = request.user
         user_id_list = picture.likes_as_flat_list()
         action = None
+        user = request.user
         if user.id not in user_id_list:
             like = Like(picture_id=picture.id, user_id=user.id)
             like.save()
@@ -67,13 +73,21 @@ class LikePicture(auth_mixins.LoginRequiredMixin,NotificationMixin ,views.View):
             like.delete()
             action = 'unlike'
         likes = Like.objects.filter(picture_id=picture.id).count()
+        # pictures = get_pictures(user)
+        pictures = Picture.objects.filter(pk=kwargs['pk'])
+        template = loader.render_to_string(
+            template_name='index.html',
+            context={'pictures': pictures},
+            request=self.request, using=None)
 
-        return JsonResponse(data={
-            'likes': likes,
-            'user_id': user.id,
-            'id_list': list(user_id_list),
-            'action': action,
-        })
+        return JsonResponse(data={'template': template,
+                                  'context': {
+                                            'likes': likes,
+                                            'user_id': user.id,
+                                            'id_list': list(user_id_list),
+                                            'action': action
+                                            }
+                                  })
 
 
 class ProfileView(views.DetailView):
@@ -235,7 +249,7 @@ class DeleteCommentView(views.DeleteView):
     def get_success_url(self):
         pk = self.request.POST['pic-pk']
         username = self.get_object().user.username
-        return reverse_lazy('picture display', kwargs={'slug': username, 'pk':pk})
+        return reverse_lazy('picture display', kwargs={'slug': username, 'pk': pk})
 
 
 class ProfilePictureUploadView(views.View):
@@ -312,7 +326,7 @@ class SearchView(views.ListView):
         elif order == 'date-joined-desc':
             users = users.order_by('-date_joined')
 
-        elif order =='date-joined-asc':
+        elif order == 'date-joined-asc':
             users = users.order_by('date_joined')
 
         self.queryset = self.get_users(users)
