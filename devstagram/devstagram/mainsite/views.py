@@ -8,6 +8,7 @@ from django.views import generic as views
 from django.views.generic.base import ContextMixin
 from django.template import loader
 
+
 from django.contrib.auth import mixins as auth_mixins
 
 from devstagram.async_chat.models import ChatRoom, PostMessage
@@ -75,6 +76,7 @@ class LikePicture(auth_mixins.LoginRequiredMixin, ContextMixin, views.View):
         likes = Like.objects.filter(picture_id=picture.id).count()
         # pictures = get_pictures(user)
         pictures = Picture.objects.filter(pk=kwargs['pk'])
+
         template = loader.render_to_string(
             template_name='index.html',
             context={'pictures': pictures},
@@ -199,7 +201,7 @@ class PictureEditView(views.View):
         if request.user.id != picture.user_id:
             raise Http404('Access denied')
         form = PictureUpdateForm(instance=picture)
-        context = {'pk': pk, 'form': form}
+        context = {'pk': pk, 'form': form, 'picture': picture}
         return render(request, 'picture_edit.html', context)
 
     def post(self, request, *args, **kwargs):

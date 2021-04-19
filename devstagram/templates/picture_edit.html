@@ -4,8 +4,15 @@
     <div style="margin-left: 20%">
     <form method="post" action="{% url 'edit' pk%}" enctype="multipart/form-data">
     {% csrf_token %}
-        {{ form }}
-    <button>Edit</button>
+        <label for="id_picture">Current picture</label>
+        <img style="width:300px; height: 300px" src="{{ picture.picture.url }}">
+        <div style="display:flex; flex-direction: column; width: 400px">
+        <label for="id_picture">Change:</label>
+        <input type="file" name="picture" accept="image/*" id="id_picture">
+        <label for="id_description">Description:</label>
+        <textarea name="description" cols="40" rows="10" maxlength="80" required id="id_description">{{ picture.description }}</textarea>
+        <button>Edit</button>
+            </div>
     </form>
     </div>
 {% endblock %}

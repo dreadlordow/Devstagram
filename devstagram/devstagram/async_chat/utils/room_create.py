@@ -26,7 +26,6 @@ def create_room(user_one, user_two):
         chatroom = chatroom[0]
 
     messages = list(chain(chatroom.message_set.all(),chatroom.postmessage_set.all()))
-    # print(messages[0].post_owner)
     messages = sorted(messages, key=lambda x: x.datetimestamp)
     context = {
         'room_name': room_name,
