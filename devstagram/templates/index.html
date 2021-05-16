@@ -24,16 +24,18 @@
                             </button>
 
                             <div id="show-likes-div" class="show-likes-div">
-
-                                {% for like in picture.like_set.all %}
-                                    <a href="{% url 'profile' like.user.username %}">
-                                        <p class="like-user-paragraph">
-                                            <img class="like-user-pfp"
-                                                 src="{{ like.user.profilepicture_set.first.image.url }}">{{ like.user }}
-                                        </p>
-                                    </a>
-                                {% endfor %}
-
+                                {% if not picture.like_set.all %}
+                                    <h1 style="color:black; text-align: center">No likes</h1>
+                                {% else %}
+                                    {% for like in picture.like_set.all %}
+                                        <a href="{% url 'profile' like.user.username %}">
+                                            <p class="like-user-paragraph">
+                                                <img class="like-user-pfp"
+                                                     src="{{ like.user.profilepicture_set.first.image.url }}">{{ like.user }}
+                                            </p>
+                                        </a>
+                                    {% endfor %}
+                                {% endif %}
                             </div>
 
 
@@ -163,6 +165,7 @@
             }
         )
 
+        // Show picture likes
         $('.show-likes-button').on('click', function (e) {
             let likeDiv = $(this).siblings('.show-likes-div').get(0)
             likeDiv.classList.toggle('show')
@@ -177,8 +180,6 @@
                     $(document.getElementById("transperant-container")).removeClass('visible')
                     $(document.getElementById("transperant-container")).addClass('hidden')
                     document.body.style.overflow = '';
-
-
                 }
             }
         })

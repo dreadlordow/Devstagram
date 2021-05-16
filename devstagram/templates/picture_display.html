@@ -20,7 +20,12 @@
                          width="30" height="30" style="border-radius: 50%;">
                     {{ picture.user.username }}
                 </a>
-
+                {% if request.user == picture.user %}
+                <form style="float:right;" method="post" action="{% url 'delete picture' picture.pk %}">
+                    {% csrf_token %}
+                    <button class="btn btn-danger del-btn">Delete</button>
+                </form>
+                {% endif %}
             </div>
             <img height="300" width="300" src="{{ picture.picture.url }}" alt="{{ picture.user.username }}'s picture">
 
@@ -74,7 +79,7 @@
             {% for comment in comments %}
 
                 <div class="comment">
-                    <div style="display:flex;">
+                    <div style="display:flex; margin-top:0.5rem; margin-right:0.2rem">
                         <img width="50" height="50" class="comment-img"
                              src="{{ comment.user.profilepicture_set.first.image.url }}"
                              alt="picture">
@@ -83,13 +88,16 @@
                             <p>{{ comment.comment }}</p>
                         </div>
                         {% if request.user == comment.user or request.user == picture.user %}
-                            <form method="post" action="{% url 'delete comment' comment.pk %}">
-                                {% csrf_token %}
-                                <button type="submit" class=" delbtn" aria-label="Close">
-                                    <span aria-hidden="true">&times;</span>
-                                    <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
-                                </button>
-                            </form>
+                            <div style="height: 10%;margin-left: auto">
+                                <form method="post" action="{% url 'delete comment' comment.pk %}">
+                                    {% csrf_token %}
+
+                                    <button type="submit" class=" delbtn" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                        <input type="hidden" name="pic-pk" value="{{ picture.pk }}">
+                                    </button>
+                                </form>
+                            </div>
                         {% endif %}
                     </div>
                 </div>
@@ -148,10 +156,10 @@
             document.getElementById("show-likes-div").classList.toggle('show')
             $(document.getElementById("transperant-container")).removeClass('hidden')
             $(document.getElementById("transperant-container")).addClass('visible')
-            window.onclick = function(event){
-                if (event.target.id !== "show-likes-div" && event.target.id !== 'like-span'){
+            window.onclick = function (event) {
+                if (event.target.id !== "show-likes-div" && event.target.id !== 'like-span') {
                     let likeDiv = document.getElementById("show-likes-div")
-                    if($(likeDiv).hasClass('show')) {
+                    if ($(likeDiv).hasClass('show')) {
                         likeDiv.classList.toggle('show')
                     }
                     $(document.getElementById("transperant-container")).removeClass('visible')

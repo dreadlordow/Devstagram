@@ -20,7 +20,29 @@
 
             </div>
         </div>
-        <p style="text-align:center; color:white;">{{ friends.count }} friends</p>
+        <button class="show-friends-button">
+            <p id="friend-span" style="text-align:center; color:white;">{{ friends.count }} friends</p>
+        </button>
+
+
+        <div id="friends-div" class="friends-div">
+            <ul>
+                {% for friend in friends %}
+
+                    <li class="friend-li">
+                        <a href="{% url 'profile' friend.username %}">
+                            <p class="like-user-paragraph">
+                                <img class="like-user-pfp"
+                                     src="{{ friend.profilepicture_set.first.image.url }}">{{ friend.username }}
+                            </p>
+                        </a>
+                    </li>
+
+                {% endfor %}
+            </ul>
+        </div>
+
+
         {% if user != request.user and friendship == False %}
             <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
                 {% csrf_token %}
@@ -77,5 +99,28 @@
                 }
             })
         })
+
+        $('.show-friends-button').on('click', function (e) {
+            let friendsDiv = $(this).siblings('.friends-div').get(0)
+            $(document.getElementById("transperant-container")).removeClass('hidden')
+            $(document.getElementById("transperant-container")).addClass('visible')
+            friendsDiv.classList.toggle('show')
+            document.body.style.overflow = 'hidden';
+
+
+            window.onclick = function (event) {
+                if (event.target.id !== 'friends-div' && event.target.id !== 'friend-span') {
+                    if ($(friendsDiv).hasClass('show')) {
+                        friendsDiv.classList.toggle('show')
+                    }
+                    $(document.getElementById("transperant-container")).addClass('hidden')
+                    $(document.getElementById("transperant-container")).removeClass('visible')
+                    document.body.style.overflow = '';
+
+                }
+            }
+        })
+
+
     </script>
 {% endblock %}

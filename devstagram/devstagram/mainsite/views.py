@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db.models import Case, When
-from django.http import Http404, JsonResponse
+from django.http import Http404, JsonResponse, HttpResponseBadRequest
 from django.shortcuts import render, redirect
 from django.urls import reverse_lazy
 from django.utils.datastructures import MultiValueDictKeyError
@@ -223,6 +223,9 @@ class PictureDeleteView(views.DeleteView):
     template_name = 'picture_display.html'
     success_url = '/index/'
 
+    def get(self, request, *args, **kwargs):
+        return HttpResponseBadRequest('Not allowed')
+
 
 class CommentPictureView(auth_mixins.LoginRequiredMixin, views.View):
     template_name = 'picture_display.html'
@@ -349,7 +352,6 @@ class SendPostViaMessage(views.View):
         chatroom = create_room(sender.username, receiver.username)
         chatroom = chatroom['chatroom']
         pic_pk = request.POST['pic-pk']
-        print(pic_pk)
         picture = Picture.objects.get(pk=pic_pk)
         owner = picture.user
         msg = PostMessage(chatroom=chatroom, sender=sender, post_owner=owner, post_image=picture)

@@ -12,7 +12,6 @@
     <link rel="stylesheet" href="{% static 'css/base.css' %}">
     <link href="{% static 'fontawesome_free/css/all.min.css' %}" rel="stylesheet" type="text/css">
     <script src="{% static 'js/base.js' %}"></script>
-    {#    <script src="{% static 'channels/js/websocketbridge.js' %}" type="text/javascript"></script>#}
     <style>a {
         color: white
     }
@@ -55,7 +54,7 @@
                                     <div class="chatbox-contents">
                                         <img class="user-img-nav" width="50" height="50"
                                              src="{{ usr.profilepicture_set.first.image.url }}">
-                                        <div>
+                                        <div class="username-message-div">
                                             <strong class="chat-username">{{ usr.username }}</strong>
                                             {% if chatroom|get_last_msg == 'Message' %}
                                                 <p class="chat-message">{{ chatroom.message_set.last.message }}</p>
@@ -159,18 +158,21 @@
             }
 
             socket.onmessage = function (message) {
-                let nl = document.querySelector('#notificationsDropdown')
-                let el = document.createElement('li');
-                el.innerHTML = `New message`
-                nl.appendChild(el)
+                {#let nl = document.querySelector('#notificationsDropdown')#}
+                {#let el = document.createElement('li');#}
+                {#el.innerHTML = `New message`#}
+                {#nl.appendChild(el)#}
                 let data = JSON.parse(message.data)
                 let senderUsername = data['sender']
                 let notificationType = data['notification_type']
                 if (data['receiver'] === username) {
-                    if (notificationType === 'message') {
-                        alert(`${senderUsername} sent you a message`)
-                    } else {
-                        alert(`${senderUsername} liked your picture`)
+                    let location = window.location
+                    if (!location.href.includes('asyncchat')) {
+                        if (notificationType === 'message') {
+                            alert(`${senderUsername} sent you a message`)
+                        } else {
+                            alert(`${senderUsername} liked your picture`)
+                        }
                     }
                 }
             }

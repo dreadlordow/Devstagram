@@ -1,4 +1,6 @@
-a{color: white}
+a {
+    color: white
+}
 
 .container {
     display: flex;
@@ -20,7 +22,7 @@ a{color: white}
     margin-right: 1rem;
 }
 
-.item img{
+.item img {
     width: 250px;
     height: 200px;
 }
@@ -52,6 +54,7 @@ a{color: white}
     margin-right: auto;
 
 }
+
 .middle a {
     text-decoration: none;
     color: springgreen;
@@ -65,35 +68,68 @@ a{color: white}
     opacity: 1;
 }
 
-.send-btn{
+.send-btn {
     margin-top: 1.5rem;
     margin-bottom: 1.5rem;
 }
 
-.profile-data{
+.profile-data {
     text-align: center;
     justify-content: center;
 }
 
 
-#send_friend_request{
+#send_friend_request {
     width: 200px;
-    margin-left:auto;
-    margin-right:auto;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.friend-request{
+.friend-request {
     margin-top: 2rem;
     justify-self: center;
     background: linear-gradient(60deg, #f79533, #f37055, #ef4e7b, #a166ab, #5073b8, #1098ad, #07b39b, #6fba82);
-    padding:10px;
+    padding: 10px;
     border-radius: 10%;
     border: none;
 
 }
 
-.profile-info-div{
-    width:100%;
-    margin-left:auto;
-    margin-right:auto;
+.profile-info-div {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+.friends-div {
+    display: none;
+    width: 300px;
+    height: 350px;
+    background: ghostwhite;
+    z-index: 10;
+    overflow-y: scroll;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    align-items: flex-start;
+}
+
+.show-friends-button {
+    border: none;
+    background: none;
+}
+
+.friend-li{
+    color:black;
+}
+
+
+.hidden {
+    display: none;
+}
+
+.show {
+    display: flex;
 }

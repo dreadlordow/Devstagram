@@ -64,7 +64,7 @@ ul {
     z-index: 1;
     transform: translate(-200px, 20px);
     height: 450px;
-    overflow: scroll;
+    overflow-y: scroll;
 }
 
 .dropdown-content span {
@@ -82,22 +82,29 @@ ul {
 }
 
 .chat-link{
-    color:black
+    color:black;
+    margin-left:0
 }
 
 .chatbox-contents{
     display: flex;
 }
-
+.username-message-div{
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+}
 .chat-username{
     margin-left: 1rem;
-    margin-top: -1rem;
     color: black;
+    text-align: left;
 }
 
 .chat-message{
     color: #131313;
     margin-left: 1rem;
+    overflow: hidden;
+    text-align: left;
 }
 
 .user-img-nav{
@@ -152,7 +159,6 @@ ul {
     left: 50%;
     transform: translate(-50%, -50%);
     align-items: flex-start;
-
 }
 
 .like-user-pfp {
@@ -186,11 +192,11 @@ ul {
 
 .hidden{visibility: hidden;}
 .visible{visibility: visible;}
-.footer{
-    left:0;
-    bottom:0;
-    position: relative;
-    height:100px;
-    width:100%;
-    background-color: #1c1e22;
-}
+/*.footer{*/
+/*    left:0;*/
+/*    bottom:0;*/
+/*    position: relative;*/
+/*    height:100px;*/
+/*    width:100%;*/
+/*    background-color: #1c1e22;*/
+/*}*/
