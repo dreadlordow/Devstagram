@@ -29,11 +29,12 @@
 </div>
 <div class="alldata">
     <nav class="navigation" id="navigation">
-        <ul>
+        <ul class="navigation-ul">
             <li class="nav-item logo">
                 <a href="{% url 'index' %}">Devstagram</a>
             </li>
 
+            {% if not request.user.is_anonymous %}
             <li class="nav-item">
                 <form method="get" action="{% url 'search' %}">
                     <input name="q" type="text" placeholder="search">
@@ -41,12 +42,14 @@
                 </form>
             </li>
 
-            {% if not request.user.is_anonymous %}
 
                 <li class="nav-item">
                     <button id="chat-btn" class="dropbtn fas fa-comment-alt" onclick=popUpFunction('chat')></button>
                     <ul id="chatdropdown" class="dropdown-content">
 
+                        {% if not chatrooms %}
+                            <h3 class="centered-heading">You have no messages</h3>
+                        {% endif %}
                         {% for chatroom, usr in chatroom_user %}
 
                             <div style="padding:10px">
@@ -80,7 +83,9 @@
                     - {{ notifslen }}</button>
 
                 <ul id="notificationsDropdown" class="dropdown-content">
-
+                {% if not notifications %}
+                    <h3 class="centered-heading">You have no notifications</h3>
+                {% endif %}
                 {% for notification in notifications %}
                     <li>
                         {% if notification|get_class == 'FriendRequest' %}
@@ -115,7 +120,6 @@
                     <hr>
                 {% endfor %}
 
-            {% endif %}
             </ul>
 
             </li>
@@ -129,6 +133,11 @@
             <a href="javascript:void(0);" class="icon" onclick="navbarFunction()">
                 <i class="fa fa-bars"></i>
             </a>
+                {% else %}
+                <li class="nav-item">
+                <a href="{% url 'landing page' %}">Register or create account</a>
+            </li>
+            {% endif %}
 
         </ul>
     </nav>

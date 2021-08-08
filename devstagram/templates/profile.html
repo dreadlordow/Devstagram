@@ -10,7 +10,9 @@
         <div class="profile-info-div">
             <h4 style="text-align: center;">{{ user.username }}</h4>
             <div class="img-container">
+            {% if profile_picture %}
                 <img class="pfp" src="{{ profile_picture.image.url }}">
+            {% endif %}
 
                 <div class="middle">
                     {% if request.user == user %}
@@ -26,6 +28,9 @@
 
 
         <div id="friends-div" class="friends-div">
+        {% if not friends %}
+            <h5>User has no friends</h5>
+        {% else %}
             <ul>
                 {% for friend in friends %}
 
@@ -40,9 +45,10 @@
 
                 {% endfor %}
             </ul>
+        {% endif %}
         </div>
 
-
+{% if not request.user.is_anonymous %}
         {% if user != request.user and friendship == False %}
             <form id="send_friend_request" action="{% url 'friend request' %}" method="post">
                 {% csrf_token %}
@@ -72,6 +78,9 @@
                 {% endfor %}
             </ul>
         {% endif %}
+    {% else %}
+    <h3>Login or Create Account to send friend request</h3>
+    {% endif %}
 {% endblock %}
 {% block ajaxjs %}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>

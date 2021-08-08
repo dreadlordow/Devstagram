@@ -1,53 +1,61 @@
 html {
-    max-height: 100%;
-    height: 100%;
-    background-image: linear-gradient(to right top, #8e44ad 0%, #3498db 100%);
+    /*height: 100vh;*/
+    background: linear-gradient(to right top, #8e44ad 0%, #3498db 100%);
+}
+
+h2{
+    text-align: center;
 }
 
 .container {
     width: 40%;
+    displaY:flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    border: 1px solid springgreen;
+    /*border: 1px solid springgreen;*/
     padding: 15px 15px;
-    margin: 0 30%;
+    margin: 10% 30%;
 }
 
 .signup-form {
+    display:flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
     padding: 10px 10px;
     color: #f4f4f4;
-    align-content: center;
-
-    /*&:before {*/
-    /*    content: '';*/
-    /*    position: absolute;*/
-    /*    top: -2px;*/
-    /*    left: 0;*/
-    /*    height: 2px;*/
-    /*    width: 100%;*/
-    /*}*/
-
 }
 
 .login-btn {
-    display: block;
-    margin-left: 30%;
-    padding: 1em;
-    width: 40%;
-    background-color: #23CABE;
-    color: white;
-    border: 0;
+    padding: 1rem;
+    width: 20rem;
+            background-image: linear-gradient(
+229.65deg
+, rgba(142, 202, 230, 0.7) 13.93%, rgba(191, 255, 171, 0.7) 66.38% );
+        color: #219ebc;
+    border: 1px solid white;
+    border-radius: 2rem;
     cursor: pointer;
-    font-size: .75em;
+    font-size: .75rem;
     font-weight: 600;
-    text-shadow: 0 1px 0 rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 0 rgba(0,0,0, 0.2);
+    margin-top: 2rem;
 }
 
-.heading {
+.login-btn:hover{
+    background-color:#0cdfd0 ;
+}
+
+.custom-form-input{
+    border-radius: 2rem;
+    border: 1px solid white;
+    height: 2rem;
     text-align: center;
-    width: 400px;
-    margin-left: auto;
-    margin-right: auto;
-    color: #d6d5d5;
-    text-transform: uppercase;
+    margin-bottom: 1rem;
+    font-size: 18px;
+    width: 20rem;
+}
+label {
+    margin-bottom:0.5rem;
 }

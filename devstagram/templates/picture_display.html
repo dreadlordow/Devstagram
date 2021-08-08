@@ -31,6 +31,7 @@
 
             <div style="display:flex; justify-content: space-between">
                 <div>
+                {% if not request.user.is_anonymous %}
                     <p>
                         {% if user.id in picture.likes_as_flat_list %}
                             <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
@@ -40,6 +41,7 @@
                                     class="far fa-heart"></i></a>
 
                         {% endif %}
+                    {% endif %}
                         <button id="show-likes-button" class="show-likes-button" onclick="showLikesBox()">
                             <span id="like-span" class="like-span">{{ picture.like_set.count }} likes</span>
                         </button>
@@ -106,6 +108,7 @@
         </div>
 
     </div>
+    {% if not request.user.is_anonymous %}
     <div class="comment-post">
         <form method="post" action="{% url 'comment' %}">
             {% csrf_token %}
@@ -115,7 +118,7 @@
             <button>Post</button>
         </form>
     </div>
-
+    {% endif %}
 
 {% endblock %}
 {% block ajaxjs %}
@@ -134,10 +137,10 @@
                 type: 'GET',
                 url: link,
                 success: function (data) {
-                    let likes = data['likes']
-                    let userId = data['user_id']
-                    let idList = data['id_list']
-                    let action = data['action']
+                    let likes = data.context['likes']
+                    let userId = data.context['user_id']
+                    let idList = data.context['id_list']
+                    let action = data.context['action']
                     curSpan.text(likes + ' likes')
 
                     if (action === 'unlike') {

@@ -1,11 +1,8 @@
 .container {
+    display:flex;
+    flex-direction: column;
     width: 35%;
-    place-items: center;
-    justify-self: center;
     justify-content: center;
-    justify-items: center;
-    align-self: center;
-    align-content: center;
     align-items: center;
     line-height: 100%;
     text-align: center;
@@ -20,6 +17,7 @@
     border-radius: 10%;
     margin-bottom: 1rem;
     min-width: 220px;
+    max-width:500px;
 }
 
 .picture {
@@ -57,6 +55,13 @@
 .upload-btn{
     margin-top: 1rem;
     margin-bottom: 1rem;
+            background-image: linear-gradient(
+229.65deg
+, rgba(142, 202, 230, 0.7) 13.93%, rgba(191, 255, 171, 0.7) 66.38% );
+    color: white;
+    padding:20px;
+    border-radius: 20px;
+
 }
 
 .heartbtn{
@@ -88,7 +93,27 @@ img{border-radius: 5%}
     bottom: 0;
     position: fixed;
     background: white;
+    padding: 15px;
+    border-radius: 20px;
+}
 
+.send-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.parentclass label {
+    padding: 0 10px;
+    font-size: 18px
+}
+
+.parentclass {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 10px;
 }
 
 .box-input{

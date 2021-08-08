@@ -29,7 +29,6 @@ INSTALLED_APPS = [
 
     'devstagram.registration',
     'devstagram.mainsite',
-    'devstagram.chat',
     'devstagram.async_chat',
 
 ]
@@ -77,6 +76,9 @@ DATABASES = {
         'PASSWORD': 'georgi',
         'HOST': '127.0.0.1',
         'PORT': '5432',
+        'TEST': {
+            'NAME': 'test_devstagram'
+        }
     }
 }
 

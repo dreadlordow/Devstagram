@@ -20,34 +20,26 @@ from devstagram.mainsite.models import Picture, FriendRequest, Like, Friendship,
 from itertools import chain
 
 
-def get_pictures(user):
-    friends = (Friendship.objects.filter(friend_one=user) | Friendship.objects.filter(
-        friend_two=user)).values_list('friend_one_id', 'friend_two_id')
-    friends = set(chain(*friends))
-    friends.add(user)
-    queryset = Picture.objects.filter(user_id__in=friends).order_by('-upload_date')
+def get_pictures():
+    queryset= Picture.objects.order_by('-upload_date')
     return queryset
 
 
+class WelcomePage(views.View):
+    def get(self, request, *args, **kwargs):
+        return render(request, 'landing_page.html')
+
+
 class IndexView(views.ListView):
-    template_name = None
+    template_name = 'index.html'
     context_object_name = 'pictures'
 
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_anonymous:
-            self.template_name = 'landing_page.html'
-        else:
-            self.template_name = 'index.html'
-        return super().dispatch(request, *args, **kwargs)
-
     def get_queryset(self):
-        user = self.request.user
-        if not user.is_anonymous:
-            self.queryset = get_pictures(user)
-            return self.queryset
+        self.queryset = get_pictures()
+        return self.queryset
 
 
-class PictureUploadView(auth_mixins.LoginRequiredMixin, views.CreateView):
+class PictureUploadView(views.CreateView):
     model = Picture
     form_class = PictureUploadForm
     template_name = 'picture_upload.html'
@@ -104,11 +96,21 @@ class ProfileView(views.DetailView):
         context = super().get_context_data(**kwargs)
         user = self.get_object()
         request_user = self.request.user
-        profile_picture = ProfilePicture.objects.get(user=self.get_object())
-        friendship = Friendship.objects.filter(friend_one_id=user.id, friend_two_id=request_user.id) | \
-                     Friendship.objects.filter(friend_one_id=request_user.id, friend_two_id=user.id)
+        try:
+            profile_picture = ProfilePicture.objects.get(user=self.get_object())
+        except(Exception) as ex:
+            profile_picture = ProfilePicture(user=self.get_object())
+            profile_picture.image = 'pictures/default.png'
+            profile_picture.save()
 
-        is_friend_request_sent = FriendRequest.objects.filter(sender=request_user, receiver=user).exists()
+        if not self.request.user.is_anonymous:
+            friendship = Friendship.objects.filter(friend_one_id=user.id, friend_two_id=request_user.id) | \
+                         Friendship.objects.filter(friend_one_id=request_user.id, friend_two_id=user.id)
+
+            is_friend_request_sent = FriendRequest.objects.filter(sender=request_user, receiver=user).exists()
+            context['friendship'] = True if friendship else False
+            context['is_friend_request_sent'] = is_friend_request_sent
+
         friends = (Friendship.objects.filter(friend_one=user) | Friendship.objects.filter(
             friend_two=user)).values_list('friend_one_id', 'friend_two_id')
         friends_id = set(chain(*friends))
@@ -119,9 +121,7 @@ class ProfileView(views.DetailView):
 
         context['friends'] = friends
         context['pictures'] = Picture.objects.filter(user=user)
-        context['friendship'] = True if friendship else False
         context['profile_picture'] = profile_picture
-        context['is_friend_request_sent'] = is_friend_request_sent
         return context
 
 
@@ -134,6 +134,7 @@ class FriendRequestView(auth_mixins.LoginRequiredMixin, views.View):
         fr = form.save(commit=False)
         sender = User.objects.get(username=request.POST['sender'])
         receiver = User.objects.get(username=request.POST['receiver'])
+
         try:
             friend_request = FriendRequest.objects.get(sender=sender, receiver=receiver)
             friend_request.delete()
@@ -254,6 +255,7 @@ class DeleteCommentView(views.DeleteView):
     def get_success_url(self):
         pk = self.request.POST['pic-pk']
         username = self.get_object().user.username
+        print(username, 'username')
         return reverse_lazy('picture display', kwargs={'slug': username, 'pk': pk})
 
 
@@ -277,6 +279,11 @@ class ProfilePictureUploadView(views.View):
             return redirect('profile', request.user.username)
         if form.is_valid():
             picture = form.save(commit=False)
+
+            old_picture = ProfilePicture.objects.get(user=request.user)
+            if not str(old_picture.image).split('/')[1] == 'default.png':
+                old_picture.image.delete()
+
             picture.picture = request.FILES['image']
             picture.user = request.user
             picture.save()

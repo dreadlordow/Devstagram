@@ -1,19 +1,39 @@
 
 html, body, h1, h2, h3, h4, h5, h6, p, li, ol, ul, pre {
-	margin: 0;
-	padding: 0;
+    margin: 0;
+    padding: 0;
 }
 
-body{
+
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f2ffed
+}
+
+::-webkit-scrollbar-thumb {
+    background: #1687a7;
+    border-radius: 20px;
+}
+
+body {
     background: #1c1e22;
     color: white;
 }
 
-a {text-decoration: none;}
+a {
+    text-decoration: none;
+}
 
-a:hover{color:white}
+a:hover {
+    color: white
+}
 
-ul {
+.navigation-ul {
+    display: flex;
+    justify-content: space-between;
     list-style-type: none;
     padding: 0;
 }
@@ -25,14 +45,12 @@ ul {
 }
 
 .nav-item {
-    display: inline-block;
     padding: 10px 20px;
-    margin-right:2rem;
-    position: relative;
+    /*position: relative;*/
 }
 
 
-.logo{
+.logo {
     text-transform: uppercase;
     letter-spacing: 3px;
     font-size: 20px;
@@ -42,14 +60,14 @@ ul {
     background-color: #23CABE;
 }
 
-.search-btn{
+.search-btn {
     background: none;
     border: none;
     color: #2cc40a;
     size: 10px;
 }
 
-.dropbtn{
+.dropbtn {
     border: none;
     background: none;
     color: white;
@@ -58,13 +76,21 @@ ul {
 .dropdown-content {
     display: none;
     position: absolute;
-    background-color: #f1f1f1;
+    background-color: #eee;
     width: 400px;
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     transform: translate(-200px, 20px);
     height: 450px;
-    overflow-y: scroll;
+    overflow-y: auto;
+    border-radius: 20px;
+}
+
+.centered-heading {
+    align-self: center;
+    justify-self: center;
+    color: black;
+    margin-top: 50%
 }
 
 .dropdown-content span {
@@ -77,66 +103,78 @@ ul {
     flex-direction: column;
 }
 
-.dropdown-content li{
+.dropdown-content li {
     padding: 15px 0;
 }
 
-.chat-link{
-    color:black;
-    margin-left:0
+.chat-link {
+    color: black;
+    margin-left: 0
 }
 
-.chatbox-contents{
+.chatbox-contents {
     display: flex;
 }
-.username-message-div{
-    display:flex;
+
+.username-message-div {
+    display: flex;
     flex-direction: column;
     justify-content: flex-start;
 }
-.chat-username{
+
+.chat-username {
     margin-left: 1rem;
     color: black;
     text-align: left;
 }
 
-.chat-message{
+.chat-message {
     color: #131313;
     margin-left: 1rem;
     overflow: hidden;
     text-align: left;
 }
 
-.user-img-nav{
+.user-img-nav {
     border-radius: 50%;
     vertical-align: center;
 }
 
-.navigation .icon{display: none}
+.navigation .icon {
+    display: none
+}
 
 @media screen and (max-width: 800px) {
-    .navigation ul li:not(:first-child) {display: none;}
+    .navigation ul li:not(:first-child) {
+        display: none;
+    }
+
     .navigation a.icon {
-        float:right;
-        display:block;
+        float: right;
+        display: block;
     }
 }
 
 @media screen and (max-width: 800px) {
-  .navigation.responsive {position: relative;}
-  .navigation.responsive .icon {
-    position: absolute;
-    right: 0;
-    top: 0;
-  }
-  .navigation.responsive ul li {
-    float: none;
-    display: block;
-    text-align: center;
-  }
-  .dropdown-content{
-      transform: translate(50px, -20px);
-  }
+    .navigation.responsive {
+        position: relative;
+    }
+
+    .navigation.responsive .icon {
+        position: absolute;
+        right: 0;
+        top: 0;
+    }
+
+    .navigation.responsive ul li {
+        float: none;
+        display: block;
+        text-align: center;
+    }
+
+    .dropdown-content {
+        transform: translate(50px, -20px);
+    }
 }
 
 
@@ -144,7 +182,7 @@ ul {
     border: none;
     background: none;
     color: white;
-    margin-left:1rem;
+    margin-left: 1rem;
 }
 
 .show-likes-div {
@@ -170,15 +208,16 @@ ul {
 
 .like-user-paragraph {
     margin-top: 1rem;
-    color:black;
+    color: black;
     margin-left: 5px;
+    text-align: left;
 }
 
 .show {
     display: block;
 }
 
-.transperant-container{
+.transperant-container {
     width: 100%;
     min-height: 100%;
     opacity: 0.3;
@@ -186,12 +225,18 @@ ul {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    background-color: rgb(87,87,87);
+    background-color: rgb(87, 87, 87);
 
 }
 
-.hidden{visibility: hidden;}
-.visible{visibility: visible;}
+.hidden {
+    visibility: hidden;
+}
+
+.visible {
+    visibility: visible;
+}
+
 /*.footer{*/
 /*    left:0;*/
 /*    bottom:0;*/

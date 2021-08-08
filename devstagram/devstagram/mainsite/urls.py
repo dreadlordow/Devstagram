@@ -2,14 +2,14 @@ from django.urls import path
 
 from devstagram.mainsite.views import IndexView, PictureUploadView, LikePicture, ProfileView, \
     FriendRequestView, CreateFriendship, PictureDisplayView, PictureEditView, CommentPictureView, \
-    ProfilePictureUploadView, SearchView, DeleteCommentView, SendPostViaMessage, PictureDeleteView
+    ProfilePictureUploadView, SearchView, DeleteCommentView, SendPostViaMessage, PictureDeleteView, WelcomePage
 
 urlpatterns = [
     # Register/Login page
-    path('', IndexView.as_view(), name='landing page'),
+    path('welcome/', WelcomePage.as_view(), name='landing page'),
 
     # Home page
-    path('index/', IndexView.as_view(), name='index'),
+    path('', IndexView.as_view(), name='index'),
 
     # Upload new pictures
     path('uploadpicture/', PictureUploadView.as_view(), name='upload'),

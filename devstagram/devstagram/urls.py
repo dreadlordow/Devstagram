@@ -9,7 +9,6 @@ urlpatterns = [
     path('', include('django.contrib.auth.urls')),
     path('', include('devstagram.registration.urls')),
     path('', include('devstagram.mainsite.urls')),
-    path('', include('devstagram.chat.urls')),
     path('', include('devstagram.async_chat.urls')),
 
 

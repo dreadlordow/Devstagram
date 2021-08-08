@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
+{% load get_friends_tag %}
 {% block styles %}
     <link rel="stylesheet" href="{% static 'css/profilecard.css' %}">{% endblock %}
 {% block content %}
@@ -63,8 +64,8 @@
                             <span class="parameter">Likes</span>
                         </div>
                         <div class="box">
-                            {% if  usr.userfriends_set.first.friends  > 0 %}
-                                <span class="value">{{ usr.userfriends_set.first.friends }}</span>
+                            {% if  usr.userfriends_set.first.friends > 0 %}
+                                <span class="value">{{ usr|get_friends }}</span>
                             {% else %}
                                 <span class="value">0</span>
                             {% endif %}

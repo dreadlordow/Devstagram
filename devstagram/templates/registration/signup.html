@@ -8,11 +8,36 @@
     <link rel="stylesheet" href="{% static 'css/signup.css' %}">
 </head>
 <body>
-<h2 class="heading">Create your Devstagram account</h2>
+<h2>Create your Devstagram account</h2>
 <form action="{% url 'register' %}" method="post" class="signup-form">
     {% csrf_token %}
     <div class="container">
-        {{ form|crispy }}
+{#        {{ form }}#}
+        <label for="id_username">Username</label>
+        <input type="text" name="username" class="custom-form-input" required="" id="id_username">
+        <label for="id_email">Email</label>
+        <input type="email" name="email" class="custom-form-input" required="" id="id_email">
+        <label for="id_password1">Password</label>
+        <input type="password" name="password1" class="custom-form-input" required="" id="id_password1">
+        <label for="id_password2">Password Confirmation</label>
+        <input type="password" name="password2" class="custom-form-input" required="" id="id_password2">
+        <label for="id_two_factor_authentication">Two factor authentication:</label>
+        <select name="two_factor_authentication" id="id_two_factor_authentication">
+            <option value="False">OFF</option>
+
+            <option value="True">ON</option>
+
+        </select>
+           {% if form.errors %}
+        {% for field in form %}
+        {% for error in field.errors %}
+            <p> {{ errors }} </p>
+        {% endfor %}
+        {% endfor %}
+        {% for error in form.non_field_errors %}
+        <p style="color: orange; font-weight: bold; font-size: 20px"> {{ error }} </p>
+        {% endfor %}
+    {% endif %}
         <button type="submit" class="login-btn">SIGN UP</button>
     </div>
 </form>

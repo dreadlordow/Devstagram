@@ -4,16 +4,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Login</title>
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
 </head>
 <body>
-<div class="sign-in-div">
+    <div class="login-form">
 <form action="{% url 'signin' %}" method="post">
     {% csrf_token %}
     {{ form|crispy }}
-    <button class="sign-in-btn">Sign in</button>
+    <button class="sign-in-btn">SIGN IN</button>
 </form>
-    </div>
+        </div>
 </body>
 </html>

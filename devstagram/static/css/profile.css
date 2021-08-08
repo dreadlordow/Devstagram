@@ -9,6 +9,7 @@ a {
     justify-content: center;
     position: center;
     width: 80%;
+    list-style: none;
 }
 
 .item {
@@ -114,6 +115,7 @@ a {
     left: 50%;
     transform: translate(-50%, -50%);
     align-items: flex-start;
+    flex-direction: column ;
 }
 
 .show-friends-button {

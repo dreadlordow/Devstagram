@@ -40,6 +40,7 @@ def get_chats(request):
                 user_ids.append(pair[0])
         preserved = Case(*[When(pk=pk, then=pos) for pos, pk in enumerate(user_ids)])
         users = User.objects.filter(pk__in=user_ids).order_by(preserved)
+        print(chatrooms)
         return {'chats': chatrooms, 'users': users, 'chatroom_user': zip(chatrooms, users)}
     return {}
 

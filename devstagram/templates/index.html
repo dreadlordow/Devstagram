@@ -5,10 +5,13 @@
 
 {% block content %}
     <div class="container">
-        <a class="btn btn-primary upload-btn" href="{% url 'upload' %}">Upload picture</a>
+    {% if not request.user.is_anonymous %}
+        <a class="upload-btn" href="{% url 'upload' %}">Upload picture</a>
+    {% endif %}
         <div id="likediv" class="like-picture">
             <ul>
                 {% for picture in pictures %}
+                    <div>
                     <li class="post">
                         <a class="username-link" href="{% url 'profile' picture.user %}"><span
                                 class="username">{{ picture.user.username }}</span></a>
@@ -39,7 +42,7 @@
                             </div>
 
 
-
+            {% if not request.user.is_anonymous %}
                             {% if user.id in picture.likes_as_flat_list %}
                                 <a class="pic_pk" href="{% url 'like' picture.pk %}"><i
                                         class="fas fa-heart"></i></a>
@@ -55,6 +58,7 @@
                                         onclick="popUpFunction('picSend',$(this).parent('span').siblings('.pic-send-box') )">
                                 </button>
                             </span>
+                        {% endif %}
                             <div id="pic-send-box" class="pic-send-box">
                                 <form id="send-form" method="post" action="{% url 'send post' %}" class="send-form">
                                     {% csrf_token %}
@@ -73,6 +77,7 @@
                         </div>
 
                     </li>
+                    </div>
                 {% endfor %}
             </ul>
 
