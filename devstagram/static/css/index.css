@@ -6,8 +6,11 @@
     align-items: center;
     line-height: 100%;
     text-align: center;
-    margin: auto auto;
     vertical-align: middle;
+}
+
+.like-picture{
+    margin-top: 25px
 }
 
 .post {

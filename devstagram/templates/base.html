@@ -47,7 +47,7 @@
                     <button id="chat-btn" class="dropbtn fas fa-comment-alt" onclick=popUpFunction('chat')></button>
                     <ul id="chatdropdown" class="dropdown-content">
 
-                        {% if not chatrooms %}
+                        {% if not chats %}
                             <h3 class="centered-heading">You have no messages</h3>
                         {% endif %}
                         {% for chatroom, usr in chatroom_user %}

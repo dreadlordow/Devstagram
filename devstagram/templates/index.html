@@ -13,8 +13,10 @@
                 {% for picture in pictures %}
                     <div>
                     <li class="post">
+                    {% if not request.user.is_anonymous %}
                         <a class="username-link" href="{% url 'profile' picture.user %}"><span
                                 class="username">{{ picture.user.username }}</span></a>
+                    {% endif %}
                         <a href="{% url 'picture display' picture.user.username picture.pk %}">
                             <img class="picture" src="{{ picture.picture.url }}">
                         </a>
