@@ -21,7 +21,7 @@ from itertools import chain
 
 
 def get_pictures():
-    queryset= Picture.objects.order_by('-upload_date')
+    queryset = Picture.objects.order_by('-upload_date')
     return queryset
 
 
@@ -222,7 +222,7 @@ class PictureEditView(views.View):
 class PictureDeleteView(views.DeleteView):
     model = Picture
     template_name = 'picture_display.html'
-    success_url = '/index/'
+    success_url = reverse_lazy('index')
 
     def get(self, request, *args, **kwargs):
         return HttpResponseBadRequest('Not allowed')
