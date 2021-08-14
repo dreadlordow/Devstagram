@@ -15,19 +15,20 @@ body {
 }
 .chatbox {
     /*width: 300px;*/
-    /*height: 400px;*/
+    height: 100vh;
     max-height: 100%;
     display: flex;
     flex-direction: column;
     overflow: hidden;
     box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
+    /*margin-bottom: 50px*/
 }
 .chat-window {
     flex: auto;
-    max-height: calc(100% - 100px);
+    max-height: calc(100vh - 80px);
     background: #2f323b;
     overflow: auto;
-    margin-bottom: 5%;
+    /*margin-bottom: 5%;*/
 }
 .chat-input {
     flex: 0 0 auto;
@@ -38,7 +39,6 @@ body {
     background: #40434e;
     border-top: 1px solid #2671ff;
     box-shadow: 0 0 4px rgba(0,0,0,.14),0 4px 8px rgba(0,0,0,.28);
-    margin-top: 10%;
 }
 .chat-input input {
     height: 59px;

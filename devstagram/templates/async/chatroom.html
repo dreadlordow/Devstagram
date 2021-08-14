@@ -15,26 +15,28 @@
                                  src="{{ request.user.profilepicture_set.first.image.url }}"/>
                             <div class="flr">
                                 {% if message|get_class == 'Message' %}
-                                <div class="messages">
-                                    <p class="msg" id="msg-0">
-                                        {{ message.message }}
-                                    </p>
-                                </div>
-                                    {% else %}
+                                    <div class="messages">
+                                        <p class="msg" id="msg-0">
+                                            {{ message.message }}
+                                        </p>
+                                    </div>
+                                {% else %}
                                     <br>
                                     <br>
                                     <a href="{% url 'picture display' message.post_owner.username message.post_image.pk %}">
-                                    <div class="border">
-                                        <div class="pic-and-username">
-                                            <img class="sent-post-pfp" src="{{ message.post_owner.profilepicture_set.first.image.url }}">
-                                            <span>{{ message.post_owner.username }}</span>
+                                        <div class="border">
+                                            <div class="pic-and-username">
+                                                <img class="sent-post-pfp"
+                                                     src="{{ message.post_owner.profilepicture_set.first.image.url }}">
+                                                <span>{{ message.post_owner.username }}</span>
+                                            </div>
+                                            <div class="main-picture">
+                                                <img width="150" height="150"
+                                                     src="{{ message.post_image.picture.url }}">
+                                            </div>
                                         </div>
-                                        <div class="main-picture">
-                                            <img width="150" height="150" src="{{ message.post_image.picture.url }}">
-                                        </div>
-                                    </div>
                                     </a>
-                                    {% endif %}
+                                {% endif %}
                                 <span class="timestamp">
                                     <span
                                             class="username">{{ request.user.username }}</span>&bull;<span
@@ -51,26 +53,28 @@
                                  src="{{ user_two_.profilepicture_set.first.image.url }}"/>
                             <div class="flr">
                                 {% if message|get_class == 'Message' %}
-                                <div class="messages">
-                                    <p class="msg" id="msg-0">
-                                        {{ message.message }}
-                                    </p>
-                                </div>
-                                    {% else %}
+                                    <div class="messages">
+                                        <p class="msg" id="msg-0">
+                                            {{ message.message }}
+                                        </p>
+                                    </div>
+                                {% else %}
                                     <br>
                                     <br>
                                     <a href="{% url 'picture display' message.post_owner.username message.post_image.pk %}">
-                                    <div class="border">
-                                        <div class="pic-and-username">
-                                            <img class="sent-post-pfp" src="{{ message.post_owner.profilepicture_set.first.image.url }}">
-                                            <span>{{ message.post_owner.username }}</span>
+                                        <div class="border">
+                                            <div class="pic-and-username">
+                                                <img class="sent-post-pfp"
+                                                     src="{{ message.post_owner.profilepicture_set.first.image.url }}">
+                                                <span>{{ message.post_owner.username }}</span>
+                                            </div>
+                                            <div class="main-picture">
+                                                <img width="150" height="150"
+                                                     src="{{ message.post_image.picture.url }}">
+                                            </div>
                                         </div>
-                                        <div class="main-picture">
-                                            <img width="150" height="150" src="{{ message.post_image.picture.url }}">
-                                        </div>
-                                    </div>
                                     </a>
-                                    {% endif %}
+                                {% endif %}
                                 <span class="timestamp"><span
                                         class="username">{{ message.sender.username }}</span>&bull;<span
                                         class="posttime">{{ message.timestamp.hour }}:{{ message.timestamp.minute }}</span></span>
@@ -102,6 +106,16 @@
 
         const user_one = JSON.parse(document.getElementById('user_one').textContent);
         const user_two = JSON.parse(document.getElementById('user_two').textContent);
+
+        const scrollToBottom = () => {
+            const scrolledDiv = document.getElementById('chat-window')
+            scrolledDiv.scrollTop = scrolledDiv.scrollHeight
+        }
+
+        // Auto scrolldown on load
+        window.onload = (event) => {
+            scrollToBottom()
+        }
 
         // Send data to server
         document.querySelector('#submit').onclick = function (e) {
@@ -154,28 +168,18 @@
             $('.username').last().text(data.username)
             $('.user-img').last().attr('src', pictureUrl)
             $('.posttime').last().text(data.timestamp)
+            scrollToBottom()
+
         }
 
-        // Auto scrolldown on load
-        $(document).ready(function () {
-            $(document).scrollTop($(document).height());
-
-        });
-
-
-        // Auto scrolldown when message is sent function
-        $(document).ready(function () {
-            $("#chat-input").click(function () {
-                $(document).scrollTop($(document).height());
-            });
-        });
 
         // Submit with ENTER-key function
         $(document).ready(function () {
-            $('#chat-input').keypress(function (k) {
-                if (k.keyCode == 13)
+            $('#submit').keypress(function (k) {
+                if (k.keyCode == 13) {
                     $('#submit').click();
-                $("html, body").animate({scrollTop: $(document).height()}, 200);
+                    scrollToBottom()
+                }
             });
 
 

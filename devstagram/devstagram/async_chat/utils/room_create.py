@@ -27,6 +27,7 @@ def create_room(user_one, user_two):
 
     messages = list(chain(chatroom.message_set.all(),chatroom.postmessage_set.all()))
     messages = sorted(messages, key=lambda x: x.datetimestamp)
+    print(messages)
     context = {
         'room_name': room_name,
         'messages': messages,

@@ -16,22 +16,26 @@ class ChatRoomConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_picture(self, user):
-        return ProfilePicture.objects.get(user=user)
+        picture = ProfilePicture.objects.get_or_create(user=user)[0]
+        print(picture.image.url)
+        return picture
 
     @database_sync_to_async
     def get_chatroom(self, user_one, user_two):
-        chatroom = ChatRoom.objects.filter(user_one=user_one, user_two=user_two)|ChatRoom.objects.filter(user_one=user_two, user_two=user_one)
+        chatroom = ChatRoom.objects.filter(user_one=user_one, user_two=user_two) | ChatRoom.objects.filter(
+            user_one=user_two, user_two=user_one)
         return chatroom[0]
 
     @database_sync_to_async
     def create_message(self, chatroom, sender, receiver, message):
-        message_created = Message(chatroom=chatroom, sender=sender, receiver=receiver ,message=message)
+        message_created = Message(chatroom=chatroom, sender=sender, receiver=receiver, message=message)
         message_created.save()
         chatroom.update_last_msg_time()
         return message_created
 
     async def connect(self):
-        self.room_name = self.scope['url_route']['kwargs']['user_one'] + '-' + self.scope['url_route']['kwargs']['user_two']
+        self.room_name = self.scope['url_route']['kwargs']['user_one'] + '-' + self.scope['url_route']['kwargs'][
+            'user_two']
         self.room_group_name = 'asyncchat_%s' % self.room_name
 
         await self.channel_layer.group_add(
@@ -105,4 +109,3 @@ class NotificationConsumer(AsyncJsonWebsocketConsumer):
 
     async def message_gossip(self, event):
         await self.send(text_data=json.dumps(event))
-
